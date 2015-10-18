@@ -1,0 +1,21 @@
+{
+    "name": "poirot/logger"
+    , "description": "Logs messages different log handlers such as files, sockets, mail, ..."
+    , "type"       : "library"
+    , "authors": [
+        {
+            "name": "Payam Naderi"
+            , "email": "naderi.payam@gmail.com"
+            , "role": "Developer"
+        }
+    ]
+    , "target-dir": "Poirot/Logger"
+    , "require": {
+        "psr/log": "~1.0"
+    }
+    , "autoload"  : {
+        "psr-0": {
+            "Poirot\\Logger": "."
+        }
+    }
+}
