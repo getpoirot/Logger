@@ -243,23 +243,19 @@ class Log
 
     protected static function __handleException($e)
     {
-        self::with(self::getExceptionHandler())->log(
-            \Psr\Log\LogLevel::ERROR
-            , sprintf(
-                'Uncaught Exception %s: "%s" at %s line %s'
-                , get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()
-            ),
-            ['exception' => $e]
-        );
+        $logger = self::with(self::getExceptionHandler());
+
+        $logger->exception($e, ['exception' => $e]);
     }
 
     protected static function __handleError($code, $message, $file = '', $line = 0, array $context = null)
     {
-        self::with(self::getErrorHandler())->log(
-            self::getLogLevelFromErrno($code)
-            , self::codeToString($code).': '.$message
-            , ['code' => $code, 'message' => $message, 'file' => $file, 'line' => $line]
-        );
+        self::with(self::getErrorHandler())
+            ->log(
+                self::getLogLevelFromErrno($code)
+                , $message
+                , ['code' => $code, 'file' => $file, 'line' => $line]
+            );
     }
 
     /**
