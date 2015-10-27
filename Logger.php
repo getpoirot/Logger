@@ -1,13 +1,27 @@
 <?php
 namespace Poirot\Logger;
 
+use Poirot\Core\ObjectCollection;
 use Poirot\Logger\Interfaces\iLogger;
-use Poirot\Logger\Logger\AbstractLogger;
-use Poirot\Logger\Logger\LogData;
+use Poirot\Logger\Interfaces\Logger\iLogSupplier;
+use Poirot\Logger\Logger\LogDataContext;
+
+/*
+$logger = new Logger();
+$logger->attach(new PhpLogSupplier, ['beforeSend' => function($level, &$message, &$context) {
+    if ($level !== LogLevel::DEBUG)
+        ## don`t log except of debug messages
+        return false;
+}]);
+$logger->debug('this is debug message', ['level' => LogLevel::NOTICE, 'other_data' => new Entity]);
+*/
 
 class Logger extends AbstractLogger
     implements iLogger
 {
+    /** @var ObjectCollection */
+    protected $__attached_suppliers;
+
     /**
      * Logs with an arbitrary level.
      *
@@ -25,7 +39,56 @@ class Logger extends AbstractLogger
         $selfContext = clone $this->context();
         $selfContext->from($context)->toArray(); ## merge with default context
 
-        foreach (clone $this->writers as $supplier)
-            $supplier->send(new LogData($selfContext));
+        /** @var iLogSupplier $supplier */
+        foreach ($this->__getObjCollection() as $supplier) {
+            $supplierData = $this->__getObjCollection()->getData($supplier);
+            if (
+                isset($supplierData['beforeSend'])
+                && call_user_func_array($supplierData['beforeSend'], [$level, &$message, &$context]) === false
+            )
+                ## not allowed to log this
+                continue;
+
+            $supplier->send(new LogDataContext($selfContext));
+        }
+    }
+
+    /**
+     * Attach Supplier To Log
+     *
+     * @param iLogSupplier $supplier
+     * @param array        $data     array['beforeSend' => \Closure]
+     *
+     * @return $this
+     */
+    function attach(iLogSupplier $supplier, array $data = [])
+    {
+        $this->__getObjCollection()->attach($supplier, $data);
+
+        return $this;
+    }
+
+    /**
+     * Detach Supplier
+     *
+     * @param iLogSupplier $supplier
+     *
+     * @return $this
+     */
+    function detach(iLogSupplier $supplier)
+    {
+        $this->__getObjCollection()->detach($supplier);
+
+        return $this;
+    }
+
+    // ...
+
+    protected function __getObjCollection()
+    {
+        if (!$this->__attached_suppliers)
+            $this->__attached_suppliers = new ObjectCollection;
+
+        return $this->__attached_suppliers;
     }
 }

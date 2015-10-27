@@ -2,6 +2,7 @@
 namespace Poirot\Logger\Formatter;
 
 use Poirot\Core\BuilderSetter;
+use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iLogData;
 
@@ -20,11 +21,10 @@ abstract class AbstractFormatter extends BuilderSetter
     /**
      * Format Data To String
      *
-     * @param iLogData $logData
-     *
+     * @param iDataSetConveyor|iLogData $logData
      * @return string
      */
-    abstract function format(iLogData $logData);
+    abstract function toString(iDataSetConveyor $logData);
 
     /**
      * Normalize all non-scalar data types (except null) in a string value

@@ -4,7 +4,7 @@ namespace Poirot\Logger\Logger;
 use Poirot\Core\OpenOptions;
 use Poirot\Logger\Interfaces\Logger\iLogData;
 
-class LogData extends OpenOptions
+class LogDataContext extends OpenOptions
     implements iLogData
 {
     protected $level;

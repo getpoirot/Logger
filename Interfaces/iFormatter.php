@@ -1,6 +1,7 @@
 <?php
 namespace Poirot\Logger\Interfaces;
 
+use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Logger\Interfaces\Logger\iLogData;
 
 interface iFormatter
@@ -8,9 +9,8 @@ interface iFormatter
     /**
      * Format Data To String
      *
-     * @param iLogData $logData
-     *
+     * @param iDataSetConveyor|iLogData $logData
      * @return string
      */
-    function format(iLogData $logData);
+    function toString(iDataSetConveyor $logData);
 }

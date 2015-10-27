@@ -12,18 +12,17 @@ use Poirot\Logger\Interfaces\Logger\iLogData;
 class PsrLogMessageFormatter extends AbstractFormatter
 {
     // {} will replace by all extra data
-    const DEFAULT_TEMPLATE = '{timestamp} ({level}): {message} {}';
+    const DEFAULT_TEMPLATE = '{timestamp} ({level}): {message}, [{%}]';
 
     protected $template;
 
     /**
      * Format Data To String
      *
-     * @param iLogData $logData
-     *
+     * @param iDataSetConveyor|iLogData $logData
      * @return string
      */
-    function format(iLogData $logData)
+    function toString(iDataSetConveyor $logData)
     {
         $template = $this->getTemplate();
 
@@ -32,12 +31,19 @@ class PsrLogMessageFormatter extends AbstractFormatter
             return $template;
 
         $replacements = [];
-        foreach ($logData->props()->readable as $key) {
-            $val = $logData->__get($key);
-            $replacements['{'.$key.'}'] = $this->flatten($val);
+        foreach ($logData->toArray() as $key => $value) {
+            $flatValue = $this->flatten($value);
 
-            // got extra values
+            $repVar = '{'.$key.'}';
+            if (strstr($template, $repVar) === false)
+                ## the key not presented it assumed as extra data
+                $replacements['{%}'][] = $key.': '.$flatValue;
+            else
+                $replacements[$repVar] = $flatValue;
         }
+
+        if (isset($replacements['{%}']))
+            $replacements['{%}'] = implode(', ', $replacements['{%}']);
 
         $return = strtr($template, $replacements);
         return $return;

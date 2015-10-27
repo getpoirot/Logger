@@ -1,5 +1,5 @@
 <?php
-namespace Poirot\Logger\Logger;
+namespace Poirot\Logger;
 
 use Poirot\Logger\Context\AggregateContext;
 use Poirot\Logger\Interfaces\iLogger;

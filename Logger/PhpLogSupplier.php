@@ -2,25 +2,25 @@
 namespace Poirot\Logger\Logger;
 
 use Poirot\Core\Interfaces\iDataSetConveyor;
-use Poirot\Core\Traits\OptionsTrait;
+use Poirot\Logger\Formatter\PsrLogMessageFormatter;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
-use Poirot\Logger\Interfaces\Logger\iLogData;
-use Poirot\Logger\Interfaces\Logger\iLogSupplier;
 
-class PhpLogSupplier
-    implements iLogSupplier
-    , iFormatterProvider
+class PhpLogSupplier extends AbstractSupplier
+    implements iFormatterProvider
 {
-    use OptionsTrait;
+    const DEFAULT_TEMPLATE = '({level}): {message}, [{%}]';
 
+    ## using address set on error_log in php.ini
     const MESSAGE_OS   = 0;
     const MESSAGE_SAPI = 4;
 
     /** @var iFormatter */
     protected $formatter;
 
+    // options
     protected $messageType;
+    protected $expandNewLines;
 
     /**
      * Construct
@@ -29,8 +29,36 @@ class PhpLogSupplier
      */
     function __construct($options = null)
     {
-        if ($options !== null)
-            $this->from($options);
+        parent::__construct($options);
+
+        ## php error_log will append timestamp so we don`t need it anymore in template
+        $this->ignoreData('timestamp');
+    }
+
+    protected function doSend(iDataSetConveyor $logData)
+    {
+        $formattedString = $this->formatter()->toString($logData);
+
+        $lines = ($this->getExpandNewLines())
+            ? preg_split('{[\r\n]+}', $formattedString)
+            : [$formattedString];
+
+        foreach ($lines as $line)
+            error_log($line, $this->getMessageType());
+    }
+
+    /**
+     * Get Formatter
+     *
+     * @return PsrLogMessageFormatter|iFormatter
+     */
+    function formatter()
+    {
+        if (!$this->formatter)
+            ## php error_log will append timestamp so we don`t need it anymore in template
+            $this->formatter = new PsrLogMessageFormatter(['template' => self::DEFAULT_TEMPLATE]);
+
+        return $this->formatter;
     }
 
 
@@ -64,43 +92,29 @@ class PhpLogSupplier
     function getMessageType()
     {
         if (!$this->messageType)
-            $this->messageType = self::MESSAGE_SAPI;
+            $this->messageType = self::MESSAGE_OS;
 
-        return $this->messageType;
+        return (int) $this->messageType;
     }
 
-
-    // ...
-
     /**
-     * Send Message To Log Supplier
+     * Expand each new lines chars to new log message
      *
-     * @param iLogData $logData
-     *
+     * @param bool $expandNewLines
      * @return $this
      */
-    function send(iLogData $logData)
+    function setExpandNewLines($expandNewLines)
     {
-        if ($this->expandNewlines) {
-            $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
-            foreach ($lines as $line) {
-                error_log($line, $this->messageType);
-            }
-        } else {
-            error_log((string) $record['formatted'], $this->messageType);
-        }
+        $this->expandNewLines = (bool) $expandNewLines;
+
+        return $this;
     }
 
     /**
-     * Get Formatter
-     *
-     * @return iFormatter
+     * @return bool
      */
-    function formatter()
+    function getExpandNewLines()
     {
-        if (!$this->formatter)
-            $this->formatter;
-
-        return $this->formatter;
+        return $this->expandNewLines;
     }
 }
