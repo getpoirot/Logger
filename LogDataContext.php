@@ -1,5 +1,5 @@
 <?php
-namespace Poirot\Logger\Logger;
+namespace Poirot\Logger;
 
 use Poirot\Core\OpenOptions;
 use Poirot\Logger\Interfaces\Logger\iLogData;

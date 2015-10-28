@@ -4,7 +4,6 @@ namespace Poirot\Logger;
 use Poirot\Core\ObjectCollection;
 use Poirot\Logger\Interfaces\iLogger;
 use Poirot\Logger\Interfaces\Logger\iLogSupplier;
-use Poirot\Logger\Logger\LogDataContext;
 
 /*
 $logger = new Logger();

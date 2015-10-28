@@ -6,7 +6,7 @@ use Poirot\Logger\Formatter\PsrLogMessageFormatter;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
 
-class PhpLogSupplier extends AbstractSupplier
+class PhpErrorLogSupplier extends AbstractSupplier
     implements iFormatterProvider
 {
     const DEFAULT_TEMPLATE = '({level}): {message}, [{%}]';
