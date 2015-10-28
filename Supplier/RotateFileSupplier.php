@@ -29,9 +29,10 @@ class RotateFileSupplier extends AbstractSupplier
         if (!is_dir($fileDir))
             mkdir($fileDir, 0755, true);
 
+        $contents = $this->formatter()->toString($logData)."\r\n";
         file_put_contents(
             $filePath
-            , $this->formatter()->toString($logData)."\r\n"
+            , $contents
             , FILE_APPEND|LOCK_EX
         );
         chmod($filePath, $this->getFilePermission());
