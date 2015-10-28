@@ -1,5 +1,5 @@
 <?php
-namespace Poirot\Logger\Logger;
+namespace Poirot\Logger\Supplier;
 
 use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Logger\Formatter\PsrLogMessageFormatter;
