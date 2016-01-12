@@ -4,14 +4,14 @@ namespace Poirot\Logger\Context;
 use Poirot\Core\AbstractOptions;
 use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Core\Interfaces\iPoirotOptions;
-use Poirot\Core\Interfaces\OptionsProviderInterface;
+use Poirot\Core\Interfaces\iOptionsProvider;
 use Poirot\Core\OpenOptions;
 use Poirot\Core\Traits\OpenOptionsTrait;
 use Poirot\Logger\Interfaces\iContext;
 
 abstract class AbstractContext
     implements iContext
-    , OptionsProviderInterface
+    , iOptionsProvider
 {
     use OpenOptionsTrait;
 
@@ -38,10 +38,10 @@ abstract class AbstractContext
     /**
      * @return AbstractOptions
      */
-    function options()
+    function inOptions()
     {
         if (!$this->options)
-            $this->options = static::optionsIns();
+            $this->options = static::newOptions();
 
         return $this->options;
     }
@@ -60,7 +60,7 @@ abstract class AbstractContext
      *
      * @return AbstractOptions
      */
-    static function optionsIns()
+    static function newOptions()
     {
         return new OpenOptions;
     }

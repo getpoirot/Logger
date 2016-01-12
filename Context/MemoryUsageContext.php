@@ -10,7 +10,7 @@ class MemoryUsageContext extends AbstractContext
      */
     function getMemoryUsage()
     {
-        return memory_get_peak_usage($this->options()->getRealUsage());
+        return memory_get_peak_usage($this->inOptions()->getRealUsage());
     }
 
 
@@ -21,7 +21,7 @@ class MemoryUsageContext extends AbstractContext
      *
      * @return MemoryUsageOptions
      */
-    function options()
+    function inOptions()
     {
         return parent::options();
     }
@@ -29,7 +29,7 @@ class MemoryUsageContext extends AbstractContext
     /**
      * @return MemoryUsageOptions
      */
-    static function optionsIns()
+    static function newOptions()
     {
         return new MemoryUsageOptions;
     }
