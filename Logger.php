@@ -7,12 +7,12 @@ use Poirot\Std\Struct\ObjectCollection;
 
 /*
 $logger = new Logger();
-$logger->attach(new PhpLogSupplier, ['beforeSend' => function($level, &$message, &$context) {
+$logger->attach(new PhpLogSupplier, ['beforeSend' => function($level, $message, $context) {
     if ($level !== LogLevel::DEBUG)
         ## don`t log except of debug messages
         return false;
 }]);
-$logger->debug('this is debug message', ['level' => LogLevel::NOTICE, 'other_data' => new Entity]);
+$logger->debug('this is debug message', ['type' => 'Debug', 'other_data' => new Entity]);
 */
 
 class Logger extends AbstractLogger
@@ -39,17 +39,22 @@ class Logger extends AbstractLogger
         $selfContext->from($context); ## merge with default context
 
         /** @var iLogSupplier $supplier */
-        foreach ($this->__getObjCollection() as $supplier) {
+        foreach ($this->__getObjCollection() as $supplier)
+        {
             $supplierData = $this->__getObjCollection()->getData($supplier);
-            if (
-                isset($supplierData['beforeSend'])
-                && call_user_func_array($supplierData['beforeSend'], [$level, &$message, &$context]) === false
-            )
-                ## not allowed to log this
-                continue;
 
-            $supplier->send(new LogDataContext($selfContext));
-        }
+            try {
+                if (isset($supplierData['beforeSend'])) {
+                    if (call_user_func_array($supplierData['beforeSend'], [$level, $message, $context]) === false)
+                        ## not allowed to log this
+                        continue;
+                }
+
+                #!# LogDataContext include default data like Timestamp
+                $supplier->send(new LogDataContext($selfContext));
+
+            } catch (\Exception $e) { /* Let Other Logs Follow */ }
+        } // end foreach
     }
 
     /**

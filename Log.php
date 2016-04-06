@@ -48,25 +48,12 @@ class Log
      */
     static function register(iLogger $logger, $name = null)
     {
-        $name = (string) $name ?: self::__attainNameFromLogger($logger);
+        $name = (string) $name ?: self::_attainNameFromLogger($logger);
 
         if (isset(self::$loggers[$name]))
             throw new \Exception('Logger with the given name already exists');
 
         self::$loggers[$name] = $logger;
-    }
-
-    /**
-     * Gets Logger instance via static method call
-     *
-     * @param  string $name Logger Registered Name
-     *
-     * @throws \Exception
-     * @return iLogger
-     */
-    static function __callStatic($name, $arguments)
-    {
-        return self::with($name);
     }
 
     /**
@@ -86,6 +73,23 @@ class Log
     }
 
     /**
+     * Gets Logger instance via static method call
+     *
+     * [code:]
+     *  iLogger Log::MyCritical()
+     * [code]
+     *
+     * @param  string $name Logger Registered Name
+     *
+     * @throws \Exception
+     * @return iLogger
+     */
+    static function __callStatic($name, $arguments)
+    {
+        return self::with($name);
+    }
+
+    /**
      * Removes logger from register
      *
      * @param string|iLogger $logger Name or logger instance
@@ -93,7 +97,7 @@ class Log
     static function unregister($logger)
     {
         if ($logger instanceof iLogger)
-            $logger = self::__attainNameFromLogger($logger);
+            $logger = self::_attainNameFromLogger($logger);
 
         if (isset(self::$loggers[$logger]))
             unset(self::$loggers[$logger]);
@@ -109,27 +113,17 @@ class Log
     static function hasLogger($logger)
     {
         if ($logger instanceof iLogger)
-            $logger = self::__attainNameFromLogger($logger);
+            $logger = self::_attainNameFromLogger($logger);
 
         return isset(self::$loggers[$logger]);
     }
-
-
-        protected static function __attainNameFromLogger(iLogger $logger)
-        {
-            return strtr(get_class($logger), ['\\' => '']);
-        }
-
-
 
     // ...
 
     /**
      * Set Default Error Handler Logger
      *
-     * - if logger instance given it must be register to
-     *   registry
-     *
+     * - if logger instance given it will be register
      * - if logger is string it retrieved from registry when needed
      *
      * @param iLogger|string $logger
@@ -138,7 +132,7 @@ class Log
     {
         if ($logger instanceof iLogger) {
             !self::hasLogger($logger) && self::register($logger);
-            $logger = self::__attainNameFromLogger($logger);
+            $logger = self::_attainNameFromLogger($logger);
         }
 
         self::$default_error_logger = $logger;
@@ -158,23 +152,26 @@ class Log
     }
 
     /**
-     * Get Default Error Handler Logger Name
+     * Get Default Error Handler Logger Callable
+     * That Can Be Set As Below:
      *
-     * set_error_handler(
-     *    Log::getErrLogHandler()
-     * )
+     * [code:]
+     *  set_error_handler(
+     *        Log::getErrLogHandler()
+     *  )
+     * [code]
      *
-     * @return string Logger name
+     * @return callable
      */
-    static function getErrLogHandler()
+    static function getErrLogCallable()
     {
         return function($code, $message, $file = '', $line = 0, array $context = null) {
-            self::__handleError($code, $message, $file = '', $line = 0, $context = null);
+            self::_handleError($code, $message, $file = '', $line = 0, $context = null);
 
             ## let error follow
             $handlers = [self::get_error_handler()];
             $static = get_class(new static);
-            if (self::get_error_handler() == $static.'::getErrorHandlerCallable') {
+            if (self::get_error_handler() == $static.'::getErrLogCallable') {
                 while ($errorHandler = restore_error_handler()) {
                     call_user_func($errorHandler, $code, $message, $file, $line, $context);
                     array_push($handlers, $errorHandler);
@@ -189,9 +186,7 @@ class Log
     /**
      * Set Default Exception Handler Logger
      *
-     * - if logger instance given it must be register to
-     *   registry
-     *
+     * - if logger instance given it will be register
      * - if logger is string it retrieved from registry when needed
      *
      * @param iLogger|string $logger
@@ -200,7 +195,7 @@ class Log
     {
         if ($logger instanceof iLogger) {
             !self::hasLogger($logger) && self::register($logger);
-            $logger = self::__attainNameFromLogger($logger);
+            $logger = self::_attainNameFromLogger($logger);
         }
 
         self::$default_exception_logger = $logger;
@@ -220,18 +215,21 @@ class Log
     }
 
     /**
-     * Get Default Exception Handler Logger
+     * Get Default Exception Handler Logger Callable
+     * That Can Be Set As Below:
      *
-     * set_exception_handler(
-     *    Log::getExcepLogHandler()
-     * )
+     * [code:]
+     *  set_exception_handler(
+     *      Log::getExcepLogHandler()
+     *  )
+     * [code]
      *
      * @return callable
      */
-    static function getExcepLogHandler()
+    static function getExceptionLogCallable()
     {
         return function($e) {
-            self::__handleException($e);
+            self::_handleException($e);
 
             ## let exception follow
             throw $e;
@@ -241,14 +239,18 @@ class Log
 
     // private methods:
 
-    protected static function __handleException($e)
+    protected static function _attainNameFromLogger(iLogger $logger)
+    {
+        return strtr(get_class($logger), ['\\' => '']);
+    }
+
+    protected static function _handleException($e)
     {
         $logger = self::with(self::getExceptionHandler());
-
         $logger->exception($e, ['exception' => $e]);
     }
 
-    protected static function __handleError($code, $message, $file = '', $line = 0, array $context = null)
+    protected static function _handleError($code, $message, $file = '', $line = 0, array $context = null)
     {
         self::with(self::getErrorHandler())
             ->log(

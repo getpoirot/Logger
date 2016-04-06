@@ -26,6 +26,24 @@ abstract class AbstractFormatter extends SetterBuilder
      */
     abstract function toString(iDataStruct $logData);
 
+    // ..
+
+    function getDateTimeFormat()
+    {
+        if (!$this->dateTimeFormat)
+            $this->setDateTimeFormat(self::DEFAULT_DATETIME_FORMAT);
+
+        return $this->dateTimeFormat;
+    }
+
+    function setDateTimeFormat($dateTimeFormat)
+    {
+        $this->dateTimeFormat = (string) $dateTimeFormat;
+        return $this;
+    }
+
+    // Tools:
+
     /**
      * Normalize all non-scalar data types (except null) in a string value
      * to represent the messages that must be log
@@ -61,22 +79,5 @@ abstract class AbstractFormatter extends SetterBuilder
             $value = gettype($value);
 
         return (string) $value;
-    }
-
-
-    // ..
-
-    function getDateTimeFormat()
-    {
-        if (!$this->dateTimeFormat)
-            $this->setDateTimeFormat(self::DEFAULT_DATETIME_FORMAT);
-
-        return $this->dateTimeFormat;
-    }
-
-    function setDateTimeFormat($dateTimeFormat)
-    {
-        $this->dateTimeFormat = (string) $dateTimeFormat;
-        return $this;
     }
 }

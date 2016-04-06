@@ -87,6 +87,8 @@ abstract class AbstractLogger extends \Psr\Log\AbstractLogger
     /**
      * Logs with an arbitrary level.
      *
+     * - context will merge with default logger context
+     *
      * @param mixed  $level
      * @param string $message
      * @param array  $context
