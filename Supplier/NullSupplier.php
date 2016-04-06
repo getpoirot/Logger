@@ -1,10 +1,10 @@
 <?php
 namespace Poirot\Logger\Supplier;
 
-use Poirot\Std\Interfaces\Struct\iDataStruct;
+use Poirot\Std\Interfaces\Struct\iData;
 
-class NullSupplier extends AbstractSupplier
+class NullSupplier extends Supplier
 {
-    protected function doSend(iDataStruct $logData)
+    protected function doSend(iData $logData)
     { }
 }

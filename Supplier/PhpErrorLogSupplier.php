@@ -4,9 +4,9 @@ namespace Poirot\Logger\Supplier;
 use Poirot\Logger\Formatter\PsrLogMessageFormatter;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
-use Poirot\Std\Interfaces\Struct\iDataStruct;
+use Poirot\Std\Interfaces\Struct\iData;
 
-class PhpErrorLogSupplier extends AbstractSupplier
+class PhpErrorLogSupplier extends Supplier
     implements iFormatterProvider
 {
     const DEFAULT_TEMPLATE = '({level}): {message}, [{%}]';
@@ -25,7 +25,7 @@ class PhpErrorLogSupplier extends AbstractSupplier
     /**
      * Construct
      *
-     * @param array|iDataStruct $options Options
+     * @param array|iData $options Options
      */
     function __construct($options = null)
     {
@@ -35,7 +35,7 @@ class PhpErrorLogSupplier extends AbstractSupplier
         $this->ignoreData('timestamp');
     }
 
-    protected function doSend(iDataStruct $logData)
+    protected function doSend(iData $logData)
     {
         $formattedString = $this->formatter()->toString($logData);
 

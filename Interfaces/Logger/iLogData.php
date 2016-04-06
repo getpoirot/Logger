@@ -1,9 +1,9 @@
 <?php
 namespace Poirot\Logger\Interfaces\Logger;
 
-use Poirot\Std\Interfaces\Struct\iDataStruct;
+use Poirot\Std\Interfaces\Struct\iData;
 
-interface iLogData extends iDataStruct
+interface iLogData extends iData
 {
 
 }

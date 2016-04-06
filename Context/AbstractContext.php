@@ -3,17 +3,17 @@ namespace Poirot\Logger\Context;
 
 use Poirot\Logger\Interfaces\iContext;
 use Poirot\Std\Interfaces\Pact\ipOptionsProvider;
-use Poirot\Std\Interfaces\Struct\iOptionsData;
-use Poirot\Std\Struct\OpenOptionsData;
+use Poirot\Std\Interfaces\Struct\iDataOptions;
+use Poirot\Std\Struct\DataOptionsOpen;
 
 abstract class AbstractContext
-    extends    OpenOptionsData // Use Setter/Getter On Extended Classes
+    extends    DataOptionsOpen // Use Setter/Getter On Extended Classes
     implements iContext
     , ipOptionsProvider
 {
     /** @var string Context Name */
     protected $name;
-    /** @var iOptionsData */
+    /** @var iDataOptions */
     protected $options;
 
 
@@ -36,7 +36,7 @@ abstract class AbstractContext
     //          @see MemoryUsageContext
 
     /**
-     * @return iOptionsData
+     * @return iDataOptions
      */
     function optsData()
     {
@@ -60,10 +60,10 @@ abstract class AbstractContext
      *
      * @param null|mixed $builder Builder Options as Constructor
      *
-     * @return iOptionsData
+     * @return iDataOptions
      */
     static function newOptsData($builder = null)
     {
-        return (new OpenOptionsData)->from($builder);
+        return (new DataOptionsOpen)->from($builder);
     }
 }

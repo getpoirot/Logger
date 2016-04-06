@@ -3,10 +3,10 @@ namespace Poirot\Logger\Formatter;
 
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iLogData;
-use Poirot\Std\Interfaces\Struct\iDataStruct;
-use Poirot\Std\SetterBuilder;
+use Poirot\Std\Interfaces\Struct\iData;
+use Poirot\Std\ConfigurableSetter;
 
-abstract class AbstractFormatter extends SetterBuilder
+abstract class AbstractFormatter extends ConfigurableSetter
     implements iFormatter
 {
     /**
@@ -21,10 +21,10 @@ abstract class AbstractFormatter extends SetterBuilder
     /**
      * Format Data To String
      *
-     * @param iDataStruct|iLogData $logData
+     * @param iData|iLogData $logData
      * @return string
      */
-    abstract function toString(iDataStruct $logData);
+    abstract function toString(iData $logData);
 
     // ..
 

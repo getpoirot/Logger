@@ -1,9 +1,9 @@
 <?php
 namespace Poirot\Logger\Context;
 
-use Poirot\Std\Struct\AbstractOptionsData;
+use Poirot\Std\Struct\aDataOptions;
 
-class MemoryUsageOptions extends AbstractOptionsData
+class MemoryUsageOptions extends aDataOptions
 {
     protected $realUsage = true;
 

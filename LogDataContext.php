@@ -2,9 +2,9 @@
 namespace Poirot\Logger;
 
 use Poirot\Logger\Interfaces\Logger\iLogData;
-use Poirot\Std\Struct\OpenOptionsData;
+use Poirot\Std\Struct\DataOptionsOpen;
 
-class LogDataContext extends OpenOptionsData
+class LogDataContextOpen extends DataOptionsOpen
     implements iLogData
 {
     protected $level;

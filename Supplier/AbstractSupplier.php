@@ -2,27 +2,27 @@
 namespace Poirot\Logger\Supplier;
 
 use Poirot\Logger\Interfaces\Logger\iLogSupplier;
-use Poirot\Std\Interfaces\Struct\iDataStruct;
-use Poirot\Std\Struct\AbstractOptionsData;
+use Poirot\Std\Interfaces\Struct\iData;
+use Poirot\Std\Struct\aDataOptions;
 
-abstract class AbstractSupplier
-    extends AbstractOptionsData
+abstract class Supplier
+    extends aDataOptions
     implements iLogSupplier
 {
     /** @var string[] Ignored Data From Log */
     protected $ignoreData = [];
 
 
-    abstract protected function doSend(iDataStruct $logData);
+    abstract protected function doSend(iData $logData);
 
     /**
      * Send Message To Log Supplier
      *
-     * @param iDataStruct $logData
+     * @param iData $logData
      *
      * @return $this
      */
-    function send(iDataStruct $logData)
+    function send(iData $logData)
     {
         $logData = clone $logData;
 

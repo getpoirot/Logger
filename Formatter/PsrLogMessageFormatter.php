@@ -2,7 +2,7 @@
 namespace Poirot\Logger\Formatter;
 
 use Poirot\Logger\Interfaces\Logger\iLogData;
-use Poirot\Std\Interfaces\Struct\iDataStruct;
+use Poirot\Std\Interfaces\Struct\iData;
 
 /**
  * Processes a record's message according to PSR-3 rules
@@ -19,10 +19,10 @@ class PsrLogMessageFormatter extends AbstractFormatter
     /**
      * Format Data To String
      *
-     * @param iDataStruct|iLogData $logData
+     * @param iData|iLogData $logData
      * @return string
      */
-    function toString(iDataStruct $logData)
+    function toString(iData $logData)
     {
         $template = $this->getTemplate();
 

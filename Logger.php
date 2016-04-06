@@ -3,7 +3,8 @@ namespace Poirot\Logger;
 
 use Poirot\Logger\Interfaces\iLogger;
 use Poirot\Logger\Interfaces\Logger\iLogSupplier;
-use Poirot\Std\Struct\ObjectCollection;
+use Poirot\Std\Interfaces\Pact\ipConfigurable;
+use Poirot\Std\Struct\CollectionObject;
 
 /*
 $logger = new Logger();
@@ -17,9 +18,24 @@ $logger->debug('this is debug message', ['type' => 'Debug', 'other_data' => new 
 
 class Logger extends AbstractLogger
     implements iLogger
+    , ipConfigurable
 {
-    /** @var ObjectCollection */
+    /** @var CollectionObject */
     protected $__attached_suppliers;
+
+    /**
+     * Build Object With Provided Options
+     *
+     * @param array $options Associated Array
+     * @param bool $throwException Throw Exception On Wrong Option
+     *
+     * @throws \Exception
+     * @return $this
+     */
+    function with(array $options, $throwException = false)
+    {
+        // TODO: Implement with() method.
+    }
 
     /**
      * Logs with an arbitrary level.
@@ -50,8 +66,8 @@ class Logger extends AbstractLogger
                         continue;
                 }
 
-                #!# LogDataContext include default data like Timestamp
-                $supplier->send(new LogDataContext($selfContext));
+                #!# LogDataContext included with default data such as Timestamp
+                $supplier->send(new LogDataContextOpen($selfContext));
 
             } catch (\Exception $e) { /* Let Other Logs Follow */ }
         } // end foreach
@@ -89,7 +105,7 @@ class Logger extends AbstractLogger
     protected function __getObjCollection()
     {
         if (!$this->__attached_suppliers)
-            $this->__attached_suppliers = new ObjectCollection;
+            $this->__attached_suppliers = new CollectionObject;
 
         return $this->__attached_suppliers;
     }

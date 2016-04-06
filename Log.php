@@ -39,6 +39,19 @@ class Log
     ];
 
     /**
+     * Build Object With Provided Options
+     *
+     * @param array $setters        Associated Array
+     * @param bool  $throwException Throw Exception On Wrong Option
+     *
+     * @throws \Exception
+     */
+    static function with(array $setters, $throwException = false)
+    {
+
+    }
+
+    /**
      * Register new logger to the registry
      *
      * @param  iLogger      $logger
@@ -64,7 +77,7 @@ class Log
      * @throws \Exception Logger name not found
      * @return iLogger
      */
-    static function with($name)
+    static function by($name)
     {
         if (!isset(self::$loggers[(string)$name]))
             throw new \Exception(sprintf('Logger (%s) is not in the registry.', $name));
