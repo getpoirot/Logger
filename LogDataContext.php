@@ -1,10 +1,10 @@
 <?php
 namespace Poirot\Logger;
 
-use Poirot\Core\OpenOptions;
 use Poirot\Logger\Interfaces\Logger\iLogData;
+use Poirot\Std\Struct\OpenOptionsData;
 
-class LogDataContext extends OpenOptions
+class LogDataContext extends OpenOptionsData
     implements iLogData
 {
     protected $level;
@@ -22,7 +22,6 @@ class LogDataContext extends OpenOptions
     function setLevel($level)
     {
         $this->level = $level;
-
         return $this;
     }
 
@@ -46,7 +45,6 @@ class LogDataContext extends OpenOptions
     function setMessage($message)
     {
         $this->message = $message;
-
         return $this;
     }
 

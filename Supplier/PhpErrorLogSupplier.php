@@ -1,10 +1,10 @@
 <?php
 namespace Poirot\Logger\Supplier;
 
-use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Logger\Formatter\PsrLogMessageFormatter;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
+use Poirot\Std\Interfaces\Struct\iDataStruct;
 
 class PhpErrorLogSupplier extends AbstractSupplier
     implements iFormatterProvider
@@ -25,7 +25,7 @@ class PhpErrorLogSupplier extends AbstractSupplier
     /**
      * Construct
      *
-     * @param array|iDataSetConveyor $options Options
+     * @param array|iDataStruct $options Options
      */
     function __construct($options = null)
     {
@@ -35,7 +35,7 @@ class PhpErrorLogSupplier extends AbstractSupplier
         $this->ignoreData('timestamp');
     }
 
-    protected function doSend(iDataSetConveyor $logData)
+    protected function doSend(iDataStruct $logData)
     {
         $formattedString = $this->formatter()->toString($logData);
 

@@ -1,9 +1,9 @@
 <?php
 namespace Poirot\Logger;
 
-use Poirot\Core\ObjectCollection;
 use Poirot\Logger\Interfaces\iLogger;
 use Poirot\Logger\Interfaces\Logger\iLogSupplier;
+use Poirot\Std\Struct\ObjectCollection;
 
 /*
 $logger = new Logger();
@@ -36,7 +36,7 @@ class Logger extends AbstractLogger
         $context['message'] = $message;
 
         $selfContext = clone $this->context();
-        $selfContext->from($context)->toArray(); ## merge with default context
+        $selfContext->from($context); ## merge with default context
 
         /** @var iLogSupplier $supplier */
         foreach ($this->__getObjCollection() as $supplier) {
@@ -62,8 +62,7 @@ class Logger extends AbstractLogger
      */
     function attach(iLogSupplier $supplier, array $data = [])
     {
-        $this->__getObjCollection()->attach($supplier, $data);
-
+        $this->__getObjCollection()->insert($supplier, $data);
         return $this;
     }
 
@@ -76,8 +75,7 @@ class Logger extends AbstractLogger
      */
     function detach(iLogSupplier $supplier)
     {
-        $this->__getObjCollection()->detach($supplier);
-
+        $this->__getObjCollection()->del($supplier);
         return $this;
     }
 

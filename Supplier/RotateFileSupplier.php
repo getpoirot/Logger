@@ -1,10 +1,10 @@
 <?php
 namespace Poirot\Logger\Supplier;
 
-use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Logger\Formatter\PsrLogMessageFormatter;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
+use Poirot\Std\Interfaces\Struct\iDataStruct;
 
 class RotateFileSupplier extends AbstractSupplier
     implements iFormatterProvider
@@ -18,7 +18,7 @@ class RotateFileSupplier extends AbstractSupplier
     /** @var iFormatter */
     protected $formatter;
 
-    protected function doSend(iDataSetConveyor $logData)
+    protected function doSend(iDataStruct $logData)
     {
         $filePath = $this->getFilePath();
         if ($filePath === null)

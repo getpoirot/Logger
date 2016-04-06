@@ -1,47 +1,47 @@
 <?php
 namespace Poirot\Logger\Context;
 
-use Poirot\Core\AbstractOptions;
-use Poirot\Core\Interfaces\iDataSetConveyor;
-use Poirot\Core\Interfaces\iPoirotOptions;
-use Poirot\Core\Interfaces\iOptionsProvider;
-use Poirot\Core\OpenOptions;
-use Poirot\Core\Traits\OpenOptionsTrait;
 use Poirot\Logger\Interfaces\iContext;
+use Poirot\Std\Interfaces\Pact\ipOptionsProvider;
+use Poirot\Std\Interfaces\Struct\iOptionsData;
+use Poirot\Std\Struct\OpenOptionsData;
 
 abstract class AbstractContext
+    extends    OpenOptionsData // Use Setter/Getter On Extended Classes
     implements iContext
-    , iOptionsProvider
+    , ipOptionsProvider
 {
-    use OpenOptionsTrait;
-
     /** @var string Context Name */
     protected $name;
-    /** @var iPoirotOptions */
+    /** @var iOptionsData */
     protected $options;
 
 
     /**
      * Construct
      *
-     * @param array|iDataSetConveyor $options Options
+     * @param null|array|\Traversable $data
+     * @param null|array|\Traversable $options
      */
-    function __construct($options = null)
+    function __construct($data = null, $options = null)
     {
         if ($options !== null)
-            $this->from($options);
+            $this->optsData()->from($options);
+
+        parent::__construct($data);
     }
 
 
-    // ...
+    // Options: each context may have some options describe how to represent data
+    //          @see MemoryUsageContext
 
     /**
-     * @return AbstractOptions
+     * @return iOptionsData
      */
-    function inOptions()
+    function optsData()
     {
         if (!$this->options)
-            $this->options = static::newOptions();
+            $this->options = static::newOptsData();
 
         return $this->options;
     }
@@ -58,10 +58,12 @@ abstract class AbstractContext
      *      $class = new Filesystem($opt);
      *   [/php]
      *
-     * @return AbstractOptions
+     * @param null|mixed $builder Builder Options as Constructor
+     *
+     * @return iOptionsData
      */
-    static function newOptions()
+    static function newOptsData($builder = null)
     {
-        return new OpenOptions;
+        return (new OpenOptionsData)->from($builder);
     }
 }

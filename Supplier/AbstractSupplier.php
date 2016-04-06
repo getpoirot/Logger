@@ -1,52 +1,38 @@
 <?php
 namespace Poirot\Logger\Supplier;
 
-use Poirot\Core\Entity;
-use Poirot\Core\Interfaces\iDataSetConveyor;
-use Poirot\Core\Traits\OptionsTrait;
-use Poirot\Logger\Interfaces\Logger\iLogData;
 use Poirot\Logger\Interfaces\Logger\iLogSupplier;
+use Poirot\Std\Interfaces\Struct\iDataStruct;
+use Poirot\Std\Struct\AbstractOptionsData;
 
-abstract class AbstractSupplier implements iLogSupplier
+abstract class AbstractSupplier
+    extends AbstractOptionsData
+    implements iLogSupplier
 {
-    use OptionsTrait;
-
     /** @var string[] Ignored Data From Log */
     protected $ignoreData = [];
 
-    /**
-     * Construct
-     *
-     * @param array|iDataSetConveyor $options Options
-     */
-    function __construct($options = null)
-    {
-        if ($options !== null)
-            $this->from($options);
-    }
 
-
-    abstract protected function doSend(iDataSetConveyor $logData);
+    abstract protected function doSend(iDataStruct $logData);
 
     /**
      * Send Message To Log Supplier
      *
-     * @param iLogData $logData
+     * @param iDataStruct $logData
      *
      * @return $this
      */
-    function send(iLogData $logData)
+    function send(iDataStruct $logData)
     {
+        $logData = clone $logData;
+
         # filter ignored data
         $ignr = $this->getIgnoredData();
 
-        $data = $logData->toArray();
-        foreach($data as $k => $v) {
+        foreach($logData as $k => $v) {
             if (in_array($k, $ignr))
-                unset($data[$k]);
+                $logData->del($k);
         }
-
-        $logData = new Entity($data);
 
         // ...
 

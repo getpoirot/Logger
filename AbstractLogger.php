@@ -21,7 +21,7 @@ abstract class AbstractLogger extends \Psr\Log\AbstractLogger
     /**
      * Default Logger Context Data
      *
-     * - context will merge with ::log argument context
+     * - default context will merge with self::log method argument context
      *
      * @return AggregateContext
      */

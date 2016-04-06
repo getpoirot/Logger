@@ -12,6 +12,7 @@
     , "target-dir": "Poirot/Logger"
     , "require": {
         "psr/log": "~1.0"
+        , "poirot/std" : "dev-master"
     }
     , "autoload"  : {
         "psr-0": {

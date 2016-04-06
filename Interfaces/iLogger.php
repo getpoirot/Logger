@@ -8,7 +8,7 @@ interface iLogger extends \Psr\Log\LoggerInterface
     /**
      * Default Logger Context Data
      *
-     * - context will merge with ::log argument context
+     * - default context will merge with self::log method argument context
      *
      * @return AggregateContext
      */

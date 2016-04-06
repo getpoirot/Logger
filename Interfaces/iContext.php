@@ -1,9 +1,13 @@
 <?php
 namespace Poirot\Logger\Interfaces;
 
-use Poirot\Core\Interfaces\iPoirotOptions;
+use Poirot\Std\Interfaces\Struct\iDataStruct;
 
-interface iContext extends iPoirotOptions
+/**
+ * Context is DataStruct that contains (extra) data of log.
+ * Usually it used on log methods context argument.
+ */
+interface iContext extends iDataStruct
 {
 
 }

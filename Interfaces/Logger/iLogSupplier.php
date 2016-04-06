@@ -1,16 +1,18 @@
 <?php
 namespace Poirot\Logger\Interfaces\Logger;
 
+use Poirot\Std\Interfaces\Struct\iDataStruct;
+
 interface iLogSupplier
 {
     /**
      * Send Message To Log Supplier
      *
-     * @param iLogData $logData
+     * @param iDataStruct $logData
      *
      * @return $this
      */
-    function send(iLogData $logData);
+    function send(iDataStruct $logData);
 
     /**
      * Ignore Data Key From Log

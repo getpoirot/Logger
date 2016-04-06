@@ -1,16 +1,17 @@
 <?php
 namespace Poirot\Logger\Interfaces;
 
-use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Logger\Interfaces\Logger\iLogData;
+use Poirot\Std\Interfaces\Struct\iDataStruct;
 
 interface iFormatter
 {
     /**
      * Format Data To String
      *
-     * @param iDataSetConveyor|iLogData $logData
+     * TODO review iDataStruct
+     * @param iDataStruct|iLogData $logData
      * @return string
      */
-    function toString(iDataSetConveyor $logData);
+    function toString(iDataStruct $logData);
 }

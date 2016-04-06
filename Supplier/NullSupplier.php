@@ -1,10 +1,10 @@
 <?php
 namespace Poirot\Logger\Supplier;
 
-use Poirot\Core\Interfaces\iDataSetConveyor;
+use Poirot\Std\Interfaces\Struct\iDataStruct;
 
 class NullSupplier extends AbstractSupplier
 {
-    protected function doSend(iDataSetConveyor $logData)
+    protected function doSend(iDataStruct $logData)
     { }
 }

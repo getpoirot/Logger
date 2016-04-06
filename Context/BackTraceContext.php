@@ -1,7 +1,6 @@
 <?php
 namespace Poirot\Logger\Context;
 
-use Poirot\Core\AbstractOptions;
 use Poirot\Logger\Interfaces\iContext;
 
 class BackTraceContext extends AbstractContext

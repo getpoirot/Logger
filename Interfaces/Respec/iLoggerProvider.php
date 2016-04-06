@@ -1,6 +1,8 @@
 <?php
 namespace Poirot\Logger\Interfaces\Respec;
 
+use Poirot\Logger\Interfaces\iLogger;
+
 interface iLoggerProvider
 {
     /**

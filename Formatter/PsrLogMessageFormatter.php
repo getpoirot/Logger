@@ -1,8 +1,8 @@
 <?php
 namespace Poirot\Logger\Formatter;
 
-use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Logger\Interfaces\Logger\iLogData;
+use Poirot\Std\Interfaces\Struct\iDataStruct;
 
 /**
  * Processes a record's message according to PSR-3 rules
@@ -19,10 +19,10 @@ class PsrLogMessageFormatter extends AbstractFormatter
     /**
      * Format Data To String
      *
-     * @param iDataSetConveyor|iLogData $logData
+     * @param iDataStruct|iLogData $logData
      * @return string
      */
-    function toString(iDataSetConveyor $logData)
+    function toString(iDataStruct $logData)
     {
         $template = $this->getTemplate();
 
@@ -31,7 +31,7 @@ class PsrLogMessageFormatter extends AbstractFormatter
             return $template;
 
         $replacements = [];
-        foreach ($logData->toArray() as $key => $value) {
+        foreach ($logData as $key => $value) {
             $flatValue = $this->flatten($value);
 
             $repVar = '{'.$key.'}';

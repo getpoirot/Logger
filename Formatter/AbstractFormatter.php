@@ -1,12 +1,12 @@
 <?php
 namespace Poirot\Logger\Formatter;
 
-use Poirot\Core\BuilderSetter;
-use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iLogData;
+use Poirot\Std\Interfaces\Struct\iDataStruct;
+use Poirot\Std\SetterBuilder;
 
-abstract class AbstractFormatter extends BuilderSetter
+abstract class AbstractFormatter extends SetterBuilder
     implements iFormatter
 {
     /**
@@ -16,21 +16,23 @@ abstract class AbstractFormatter extends BuilderSetter
      */
     const DEFAULT_DATETIME_FORMAT = 'c';
 
-    protected $dateTimeFormat;
+    protected $dateTimeFormat = self::DEFAULT_DATETIME_FORMAT;
 
     /**
      * Format Data To String
      *
-     * @param iDataSetConveyor|iLogData $logData
+     * @param iDataStruct|iLogData $logData
      * @return string
      */
-    abstract function toString(iDataSetConveyor $logData);
+    abstract function toString(iDataStruct $logData);
 
     /**
      * Normalize all non-scalar data types (except null) in a string value
+     * to represent the messages that must be log
      *
      * @param mixed $value
-     * @return mixed
+     *
+     * @return string
      */
     protected function flatten($value)
     {
@@ -75,7 +77,6 @@ abstract class AbstractFormatter extends BuilderSetter
     function setDateTimeFormat($dateTimeFormat)
     {
         $this->dateTimeFormat = (string) $dateTimeFormat;
-
         return $this;
     }
 }
