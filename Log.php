@@ -41,12 +41,12 @@ class Log
     /**
      * Build Object With Provided Options
      *
-     * @param array $setters        Associated Array
+     * @param array $options        Associated Array
      * @param bool  $throwException Throw Exception On Wrong Option
      *
      * @throws \Exception
      */
-    static function with(array $setters, $throwException = false)
+    static function with(array $options, $throwException = false)
     {
 
     }
@@ -99,7 +99,7 @@ class Log
      */
     static function __callStatic($name, $arguments)
     {
-        return self::with($name);
+        return self::by($name);
     }
 
     /**
@@ -259,13 +259,13 @@ class Log
 
     protected static function _handleException($e)
     {
-        $logger = self::with(self::getExceptionHandler());
+        $logger = self::by(self::getExceptionHandler());
         $logger->exception($e, ['exception' => $e]);
     }
 
     protected static function _handleError($code, $message, $file = '', $line = 0, array $context = null)
     {
-        self::with(self::getErrorHandler())
+        self::by(self::getErrorHandler())
             ->log(
                 self::getLogLevelFromErrno($code)
                 , $message

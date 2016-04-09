@@ -2,7 +2,8 @@
 namespace Poirot\Logger;
 
 use Poirot\Logger\Interfaces\iLogger;
-use Poirot\Logger\Interfaces\Logger\iLogSupplier;
+use Poirot\Logger\Interfaces\Logger\iSupplierLogger;
+use Poirot\Logger\Logger\LogDataContext;
 use Poirot\Std\Interfaces\Pact\ipConfigurable;
 use Poirot\Std\Struct\CollectionObject;
 
@@ -16,7 +17,7 @@ $logger->attach(new PhpLogSupplier, ['beforeSend' => function($level, $message, 
 $logger->debug('this is debug message', ['type' => 'Debug', 'other_data' => new Entity]);
 */
 
-class Logger extends AbstractLogger
+class Logger extends aLogger
     implements iLogger
     , ipConfigurable
 {
@@ -38,6 +39,26 @@ class Logger extends AbstractLogger
     }
 
     /**
+     * Load Build Options From Given Resource
+     *
+     * - usually it used in cases that we have to support
+     *   more than once configure situation
+     *   [code:]
+     *     Configurable->with(Configurable::withOf(path\to\file.conf))
+     *   [code]
+     *
+     *
+     * @param array|mixed $resource
+     *
+     * @throws \InvalidArgumentException if resource not supported
+     * @return array
+     */
+    static function withOf($resource)
+    {
+        // TODO: Implement withOf() method.
+    }
+
+    /**
      * Logs with an arbitrary level.
      *
      * @param mixed  $level
@@ -54,7 +75,7 @@ class Logger extends AbstractLogger
         $selfContext = clone $this->context();
         $selfContext->from($context); ## merge with default context
 
-        /** @var iLogSupplier $supplier */
+        /** @var iSupplierLogger $supplier */
         foreach ($this->__getObjCollection() as $supplier)
         {
             $supplierData = $this->__getObjCollection()->getData($supplier);
@@ -67,7 +88,7 @@ class Logger extends AbstractLogger
                 }
 
                 #!# LogDataContext included with default data such as Timestamp
-                $supplier->send(new LogDataContextOpen($selfContext));
+                $supplier->send(new LogDataContext($selfContext));
 
             } catch (\Exception $e) { /* Let Other Logs Follow */ }
         } // end foreach
@@ -76,12 +97,12 @@ class Logger extends AbstractLogger
     /**
      * Attach Supplier To Log
      *
-     * @param iLogSupplier $supplier
+     * @param iSupplierLogger $supplier
      * @param array        $data     array['beforeSend' => \Closure]
      *
      * @return $this
      */
-    function attach(iLogSupplier $supplier, array $data = [])
+    function attach(iSupplierLogger $supplier, array $data = [])
     {
         $this->__getObjCollection()->insert($supplier, $data);
         return $this;
@@ -90,11 +111,11 @@ class Logger extends AbstractLogger
     /**
      * Detach Supplier
      *
-     * @param iLogSupplier $supplier
+     * @param iSupplierLogger $supplier
      *
      * @return $this
      */
-    function detach(iLogSupplier $supplier)
+    function detach(iSupplierLogger $supplier)
     {
         $this->__getObjCollection()->del($supplier);
         return $this;

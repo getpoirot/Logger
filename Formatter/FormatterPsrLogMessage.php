@@ -9,7 +9,7 @@ use Poirot\Std\Interfaces\Struct\iData;
  *
  * It replaces {foo} with the value from $this->getFoo()
  */
-class PsrLogMessageFormatter extends AbstractFormatter
+class FormatterPsrLogMessage extends aFormatter
 {
     // {} will replace by all extra data
     const DEFAULT_TEMPLATE = '{timestamp} ({level}): {message}, [{%}]';

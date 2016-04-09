@@ -9,7 +9,6 @@ interface iFormatter
     /**
      * Format Data To String
      *
-     * TODO review iDataStruct
      * @param iData|iLogData $logData
      * @return string
      */

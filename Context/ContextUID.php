@@ -1,7 +1,7 @@
 <?php
 namespace Poirot\Logger\Context;
 
-class UIdentifierContext extends AbstractContext
+class ContextUID extends aContext
 {
     /**
      * unique identifier

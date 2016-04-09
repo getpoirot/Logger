@@ -6,7 +6,7 @@ use Poirot\Std\Interfaces\Pact\ipOptionsProvider;
 use Poirot\Std\Interfaces\Struct\iDataOptions;
 use Poirot\Std\Struct\DataOptionsOpen;
 
-abstract class AbstractContext
+abstract class aContext
     extends    DataOptionsOpen // Use Setter/Getter On Extended Classes
     implements iContext
     , ipOptionsProvider

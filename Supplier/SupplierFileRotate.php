@@ -1,12 +1,13 @@
 <?php
 namespace Poirot\Logger\Supplier;
 
-use Poirot\Logger\Formatter\PsrLogMessageFormatter;
+use Poirot\Logger\Formatter\FormatterPsrLogMessage;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
 use Poirot\Std\Interfaces\Struct\iData;
 
-class RotateFileSupplier extends Supplier
+class SupplierFileRotate
+    extends aSupplierLogger
     implements iFormatterProvider
 {
     # options
@@ -41,12 +42,12 @@ class RotateFileSupplier extends Supplier
     /**
      * Get Formatter
      *
-     * @return PsrLogMessageFormatter|iFormatter
+     * @return FormatterPsrLogMessage|iFormatter
      */
     function formatter()
     {
         if (!$this->formatter)
-            $this->formatter = new PsrLogMessageFormatter;
+            $this->formatter = new FormatterPsrLogMessage;
 
         return $this->formatter;
     }

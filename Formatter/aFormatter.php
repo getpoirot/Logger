@@ -6,7 +6,8 @@ use Poirot\Logger\Interfaces\Logger\iLogData;
 use Poirot\Std\Interfaces\Struct\iData;
 use Poirot\Std\ConfigurableSetter;
 
-abstract class AbstractFormatter extends ConfigurableSetter
+abstract class aFormatter
+    extends ConfigurableSetter
     implements iFormatter
 {
     /**

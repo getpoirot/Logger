@@ -1,7 +1,7 @@
 <?php
 namespace Poirot\Logger\Context;
 
-class ProcessIdContext extends AbstractContext
+class ContextPID extends aContext
 {
     /**
      * Get Current Process Id

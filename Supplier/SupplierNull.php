@@ -3,7 +3,7 @@ namespace Poirot\Logger\Supplier;
 
 use Poirot\Std\Interfaces\Struct\iData;
 
-class NullSupplier extends Supplier
+class SupplierNull extends aSupplierLogger
 {
     protected function doSend(iData $logData)
     { }

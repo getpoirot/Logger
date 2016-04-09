@@ -1,7 +1,7 @@
 <?php
 namespace Poirot\Logger\Context;
 
-class MemoryUsageContext extends AbstractContext
+class ContextMemoryUsage extends aContext
 {
     /**
      * Get Memory Usage Peak
@@ -19,7 +19,7 @@ class MemoryUsageContext extends AbstractContext
     /**
      * @override autocomplete
      *
-     * @return MemoryUsageOptions
+     * @return ContextMemoryUsageOptions
      */
     function optsData()
     {
@@ -27,10 +27,10 @@ class MemoryUsageContext extends AbstractContext
     }
 
     /**
-     * @return MemoryUsageOptions
+     * @return ContextMemoryUsageOptions
      */
     static function newOptsData($builder = null)
     {
-        return (new MemoryUsageOptions)->from($builder);
+        return (new ContextMemoryUsageOptions)->from($builder);
     }
 }

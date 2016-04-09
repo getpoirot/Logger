@@ -1,12 +1,12 @@
 <?php
 namespace Poirot\Logger\Supplier;
 
-use Poirot\Logger\Formatter\PsrLogMessageFormatter;
+use Poirot\Logger\Formatter\FormatterPsrLogMessage;
 use Poirot\Logger\Interfaces\iFormatter;
 use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
 use Poirot\Std\Interfaces\Struct\iData;
 
-class PhpErrorLogSupplier extends Supplier
+class SupplierPhpErrorLog extends aSupplierLogger
     implements iFormatterProvider
 {
     const DEFAULT_TEMPLATE = '({level}): {message}, [{%}]';
@@ -50,13 +50,13 @@ class PhpErrorLogSupplier extends Supplier
     /**
      * Get Formatter
      *
-     * @return PsrLogMessageFormatter|iFormatter
+     * @return FormatterPsrLogMessage|iFormatter
      */
     function formatter()
     {
         if (!$this->formatter)
             ## php error_log will append timestamp so we don`t need it anymore in template
-            $this->formatter = new PsrLogMessageFormatter(['template' => self::DEFAULT_TEMPLATE]);
+            $this->formatter = new FormatterPsrLogMessage(['template' => self::DEFAULT_TEMPLATE]);
 
         return $this->formatter;
     }

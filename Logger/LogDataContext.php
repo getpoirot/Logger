@@ -1,10 +1,10 @@
 <?php
-namespace Poirot\Logger;
+namespace Poirot\Logger\Logger;
 
 use Poirot\Logger\Interfaces\Logger\iLogData;
 use Poirot\Std\Struct\DataOptionsOpen;
 
-class LogDataContextOpen extends DataOptionsOpen
+class LogDataContext extends DataOptionsOpen
     implements iLogData
 {
     protected $level;

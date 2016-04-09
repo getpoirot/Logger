@@ -1,13 +1,13 @@
 <?php
 namespace Poirot\Logger\Supplier;
 
-use Poirot\Logger\Interfaces\Logger\iLogSupplier;
+use Poirot\Logger\Interfaces\Logger\iSupplierLogger;
 use Poirot\Std\Interfaces\Struct\iData;
 use Poirot\Std\Struct\aDataOptions;
 
-abstract class Supplier
+abstract class aSupplierLogger
     extends aDataOptions
-    implements iLogSupplier
+    implements iSupplierLogger
 {
     /** @var string[] Ignored Data From Log */
     protected $ignoreData = [];

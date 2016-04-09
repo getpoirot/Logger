@@ -3,7 +3,7 @@ namespace Poirot\Logger\Context;
 
 use Poirot\Logger\Interfaces\iContext;
 
-class BackTraceContext extends AbstractContext
+class ContextBackTrace extends aContext
     implements iContext
 {
     /**

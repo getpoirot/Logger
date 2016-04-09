@@ -3,7 +3,7 @@ namespace Poirot\Logger\Context;
 
 use Poirot\Std\Struct\aDataOptions;
 
-class MemoryUsageOptions extends aDataOptions
+class ContextMemoryUsageOptions extends aDataOptions
 {
     protected $realUsage = true;
 

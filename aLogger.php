@@ -1,34 +1,41 @@
 <?php
 namespace Poirot\Logger;
 
-use Poirot\Logger\Context\AggregateContext;
+use Poirot\Logger\Context\ContextAggregate;
 use Poirot\Logger\Interfaces\iLogger;
 use Psr\Log\LogLevel;
 
-abstract class AbstractLogger extends \Psr\Log\AbstractLogger
+abstract class aLogger extends \Psr\Log\AbstractLogger
     implements iLogger
 {
-    /** @var AggregateContext */
+    /** @var ContextAggregate */
     protected $context;
-    /** @var array Ignore Context Data From Log */
-    protected $_ignore_data = [];
+
     /**
-     * @var callable It trigger just before log
-     * bool function($level, $message, $context)
+     * Logs with an arbitrary level.
+     *
+     * - context will merge with default logger context
+     *
+     * @param mixed  $level
+     * @param string $message
+     * @param array  $context
+     *
+     * @return null
      */
-    protected $_beforeLog;
+    abstract function log($level, $message, array $context = []);
+
 
     /**
      * Default Logger Context Data
      *
      * - default context will merge with self::log method argument context
      *
-     * @return AggregateContext
+     * @return ContextAggregate
      */
     function context()
     {
         if (!$this->context)
-            $this->context = new AggregateContext;
+            $this->context = new ContextAggregate;
 
         return $this->context;
     }
@@ -83,17 +90,4 @@ abstract class AbstractLogger extends \Psr\Log\AbstractLogger
      * @return $this
      */
     // abstract function beforeLog(callable $callable);
-
-    /**
-     * Logs with an arbitrary level.
-     *
-     * - context will merge with default logger context
-     *
-     * @param mixed  $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return null
-     */
-    abstract function log($level, $message, array $context = []);
 }
