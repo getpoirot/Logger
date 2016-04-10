@@ -79,12 +79,7 @@ class LoggerHeap
 
                 // ['Logger\ClassName', ]
                 if (is_string($heapLogger) && is_int($p)) {
-
-                    (class_exists($heapLogger)) && $heapLogger = new $heapLogger();
-
-                    if ($options && $heapLogger instanceof ipConfigurable)
-                        /** @var ipConfigurable $heapLogger */
-                        $heapLogger->with($options);
+                    (class_exists($heapLogger)) && $heapLogger = new $heapLogger($options);
                 }
 
                 $this->attach($heapLogger, $defContext);
