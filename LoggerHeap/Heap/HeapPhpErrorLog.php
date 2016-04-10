@@ -21,8 +21,8 @@ class HeapPhpErrorLog
     protected $formatter;
 
     // options
-    protected $messageType;
-    protected $expandNewLines;
+    protected $messageType = self::MESSAGE_OS;
+    protected $expandNewLines = false;
 
     /**
      * Construct
@@ -41,7 +41,7 @@ class HeapPhpErrorLog
     {
         $formattedString = $this->formatter()->toString($logData);
 
-        $lines = ($this->getExpandNewLines())
+        $lines = ($this->isExpandNewLines())
             ? preg_split('{[\r\n]+}', $formattedString)
             : [$formattedString];
 
@@ -82,7 +82,6 @@ class HeapPhpErrorLog
             ));
 
         $this->messageType = $type;
-
         return $this;
     }
 
@@ -93,9 +92,6 @@ class HeapPhpErrorLog
      */
     function getMessageType()
     {
-        if (!$this->messageType)
-            $this->messageType = self::MESSAGE_OS;
-
         return (int) $this->messageType;
     }
 
@@ -108,14 +104,13 @@ class HeapPhpErrorLog
     function setExpandNewLines($expandNewLines)
     {
         $this->expandNewLines = (bool) $expandNewLines;
-
         return $this;
     }
 
     /**
      * @return bool
      */
-    function getExpandNewLines()
+    function isExpandNewLines()
     {
         return $this->expandNewLines;
     }

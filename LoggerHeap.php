@@ -20,8 +20,8 @@ $logger->debug('this is debug message', ['type' => 'Debug', 'other_data' => new 
 // =================================================
 $loggerHeap = new P\Logger\LoggerHeap([
     'attach' => [
-        'Poirot\Logger\LoggerHeap\Heap\HeapNull' => [
-            '_def_context' => ['_before_send' => function($level, $message, $context) {/* ... * /}],
+        'Poirot\Logger\LoggerHeap\Heap\HeapFileRotate' => [
+            'file_path' => __DIR__.'/php_log_messages.log',
         ]
     ],
     'context' => ['Author' => 'Payam Naderi']

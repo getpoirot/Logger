@@ -13,8 +13,9 @@ class HeapFileRotate
     # options
     protected $filePath;
     protected $filePermission = 0644;
-    protected $_f__limitation;
-    protected $_f__limitReach;
+    /** @var callable */
+    protected $_f__limitation; # determine limitation
+    protected $_f__limitReach; # determine limitation reach
 
     /** @var iFormatter */
     protected $formatter;
@@ -23,6 +24,8 @@ class HeapFileRotate
     {
         $filePath = $this->getFilePath();
         if ($filePath === null)
+            ## nothing to do file log not defined
+            #!# in log we prefer to not throw any error message
             return;
 
         // check dir exists
@@ -75,9 +78,6 @@ class HeapFileRotate
      */
     function getFilePath()
     {
-        if (defined('APP_DIR_TEMP') && !$this->filePath)
-            $this->setFilePath(APP_DIR_TEMP.'/log/php_errors.log');
-
         return $this->filePath;
     }
 
@@ -90,8 +90,7 @@ class HeapFileRotate
      */
     function setFilePath($filePath)
     {
-        $this->filePath = $filePath;
-
+        $this->filePath = (string) $filePath;
         return $this;
     }
 
@@ -115,7 +114,6 @@ class HeapFileRotate
     function setFilePermission($filePermission)
     {
         $this->filePermission = $filePermission;
-
         return $this;
     }
 
@@ -130,7 +128,6 @@ class HeapFileRotate
     function setLimitation(callable $limitation)
     {
         $this->_f__limitation = $limitation;
-
         return $this;
     }
 
@@ -143,7 +140,7 @@ class HeapFileRotate
     {
         if (!$this->_f__limitation)
             $this->setLimitation(function($filePath) {
-                return $this->__hasLimitationReach($filePath);
+                return $this->_default_hasLimitationReach($filePath);
             });
 
         return $this->_f__limitation;
@@ -162,7 +159,6 @@ class HeapFileRotate
     function setLimitReach($limitReach)
     {
         $this->_f__limitReach = $limitReach;
-
         return $this;
     }
 
@@ -177,7 +173,7 @@ class HeapFileRotate
     {
         if (!$this->_f__limitReach)
             $this->setLimitReach(function($filePath) {
-                $this->__doLimitationReach($filePath);
+                $this->_default_doLimitationReach($filePath);
             });
 
         return $this->_f__limitReach;
@@ -185,12 +181,12 @@ class HeapFileRotate
 
     // ...
 
-    protected function __hasLimitationReach($filePath)
+    protected function _default_hasLimitationReach($filePath)
     {
         return (is_file($filePath) && filesize($filePath) > 50000);
     }
 
-    protected function __doLimitationReach($filePath)
+    protected function _default_doLimitationReach($filePath)
     {
         unlink($filePath);
     }
