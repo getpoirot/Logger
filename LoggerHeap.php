@@ -1,6 +1,7 @@
 <?php
 namespace Poirot\Logger;
 
+use Poirot\Std\ErrorStack;
 use Poirot\Std\Interfaces\Pact\ipConfigurable;
 use Poirot\Std\Struct\CollectionObject;
 use Poirot\Logger\Interfaces\iLogger;
@@ -9,7 +10,7 @@ use Poirot\Logger\LoggerHeap\Interfaces\iHeapLogger;
 
 /*
 $logger = new LoggerHeap();
-$logger->attach(new PhpLogSupplier, ['_beforeSend' => function($level, $message, $context) {
+$logger->attach(new PhpLogSupplier, ['_beforeSend' => function($level, $message, iContext $context) {
     if ($level !== LogLevel::DEBUG)
         ## don`t log except of debug messages
         return false;
@@ -125,6 +126,9 @@ class LoggerHeap
     /**
      * Logs with an arbitrary level.
      *
+     * - from attached heaps call "_beforeSend" data callable
+     *   if false return skip log for this heap
+     *
      * @param mixed  $level
      * @param string $message
      * @param array  $context
@@ -144,24 +148,27 @@ class LoggerHeap
         {
             $heapAttachedContext = $this->__getObjCollection()->getData($heapSupplier);
 
-            try {
-                if (isset($heapAttachedContext['_beforeSend'])) {
-                    $callable = $heapAttachedContext['_beforeSend'];
-                    unset($heapAttachedContext['_beforeSend']);
+            ErrorStack::handleException(function($e) {/* Let Other Logs Follow */});
 
-                    if (false === call_user_func($callable, $level, $message, $context))
-                        ## not allowed to log this
-                        continue;
-                }
+            if (isset($heapAttachedContext['_beforeSend'])) {
+                $callable = $heapAttachedContext['_beforeSend'];
+                unset($heapAttachedContext['_beforeSend']);
 
-                #!# LogDataContext included with default data such as Timestamp
-                $contextWrite = new ContextDefault($selfContext);
+
+                $context = new ContextDefault($selfContext); // #!# Context included with default data such as Timestamp
                 ## set attached heap specific context
                 ## it will overwrite defaults
-                $contextWrite->from($heapAttachedContext);
-                $heapSupplier->write($contextWrite);
+                $context->from($heapAttachedContext);
 
-            } catch (\Exception $e) { /* Let Other Logs Follow */ }
+                if (false === call_user_func($callable, $level, $message, $context))
+                    ## not allowed to log this
+                    continue;
+            }
+
+            $heapSupplier->write($context);
+
+            ErrorStack::handleDone();
+
         } // end foreach
     }
 
