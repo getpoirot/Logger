@@ -126,8 +126,11 @@ class LoggerHeap
     /**
      * Logs with an arbitrary level.
      *
-     * - from attached heaps call "_beforeSend" data callable
+     * - merge given context with default context data clone
+     * - merge heap context with context data follow
+     * - from attached heaps call "_beforeSend" data callable.
      *   if false return skip log for this heap
+     * - write context into log through heap
      *
      * @param mixed  $level
      * @param string $message
@@ -137,9 +140,6 @@ class LoggerHeap
      */
     function log($level, $message, array $context = [])
     {
-        $context['level']   = $level;
-        $context['message'] = $message;
-
         $selfContext = clone $this->context();
         $selfContext->from($context); ## merge with default context
 
@@ -147,24 +147,25 @@ class LoggerHeap
         foreach ($this->__getObjCollection() as $heapSupplier)
         {
             $heapAttachedContext = $this->__getObjCollection()->getData($heapSupplier);
-
-            ErrorStack::handleException(function($e) {/* Let Other Logs Follow */});
-
             if (isset($heapAttachedContext['_beforeSend'])) {
                 $callable = $heapAttachedContext['_beforeSend'];
                 unset($heapAttachedContext['_beforeSend']);
-
-
-                $context = new ContextDefault($selfContext); // #!# Context included with default data such as Timestamp
-                ## set attached heap specific context
-                ## it will overwrite defaults
-                $context->from($heapAttachedContext);
-
-                if (false === call_user_func($callable, $level, $message, $context))
-                    ## not allowed to log this
-                    continue;
             }
 
+            $context = new ContextDefault($selfContext); // #!# Context included with default data such as Timestamp
+            ## set attached heap specific context
+            ## it will overwrite defaults
+            $context->from($heapAttachedContext);
+
+            // ..
+
+            ErrorStack::handleException(function($e) {/* Let Other Logs Follow */});
+
+            if (isset($callable) && false === call_user_func($callable, $level, $message, $context))
+                ## not allowed to log this
+                continue;
+
+            $context->from(['level' => $level, 'message' => $message]);
             $heapSupplier->write($context);
 
             ErrorStack::handleDone();
