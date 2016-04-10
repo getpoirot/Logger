@@ -64,8 +64,8 @@ class LoggerHeap
                 /** @var iHeapLogger $heapLogger */
                 if (is_string($p)) {
                     // 'Logger\ClassName' => [logOptions..]
-                    $heapLogger  = $p;
-                    $options     = $b;
+                    $heapLogger = $p;
+                    $opts       = $b;
                 } else {
                     // [iLogger, ]
                     $heapLogger  = $b;
@@ -73,13 +73,15 @@ class LoggerHeap
                 }
 
                 $defContext = [];
-                if (is_array($options) && isset($options['_def_context']))
+                if (is_array($opts) && isset($opts['_def_context'])) {
                     ## default context data attached to heap log
-                    $defContext = $options['_def_context'];
+                    $defContext = $opts['_def_context'];
+                    unset($opts['_def_context']);
+                }
 
                 // ['Logger\ClassName', ]
-                if (is_string($heapLogger) && is_int($p)) {
-                    (class_exists($heapLogger)) && $heapLogger = new $heapLogger($options);
+                if (is_string($heapLogger)) {
+                    (class_exists($heapLogger)) && $heapLogger = new $heapLogger($opts);
                 }
 
                 $this->attach($heapLogger, $defContext);
@@ -142,9 +144,10 @@ class LoggerHeap
         foreach ($this->__getObjCollection() as $heapSupplier)
         {
             $heapAttachedContext = $this->__getObjCollection()->getData($heapSupplier);
-            if (isset($heapAttachedContext['_beforeSend'])) {
-                $callable = $heapAttachedContext['_beforeSend'];
-                unset($heapAttachedContext['_beforeSend']);
+
+            if (isset($heapAttachedContext['_before_send'])) {
+                $callable = $heapAttachedContext['_before_send'];
+                unset($heapAttachedContext['_before_send']);
             }
 
             $context = new ContextDefault($selfContext); // #!# Context included with default data such as Timestamp
@@ -156,11 +159,12 @@ class LoggerHeap
 
             ErrorStack::handleException(function($e) {/* Let Other Logs Follow */});
 
+            $context->from(['level' => $level, 'message' => $message]);
+
             if (isset($callable) && false === call_user_func($callable, $level, $message, $context))
                 ## not allowed to log this
                 continue;
 
-            $context->from(['level' => $level, 'message' => $message]);
             $heapSupplier->write($context);
 
             ErrorStack::handleDone();
