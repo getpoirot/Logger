@@ -9,7 +9,7 @@ use Poirot\Logger\LoggerHeap\Interfaces\iHeapLogger;
 
 /*
 $logger = new LoggerHeap();
-$logger->attach(new PhpLogSupplier, ['beforeSend' => function($level, $message, $context) {
+$logger->attach(new PhpLogSupplier, ['_beforeSend' => function($level, $message, $context) {
     if ($level !== LogLevel::DEBUG)
         ## don`t log except of debug messages
         return false;
@@ -23,20 +23,77 @@ class LoggerHeap
     , ipConfigurable
 {
     /** @var CollectionObject */
-    protected $__attached_suppliers;
+    protected $_attached_heaps;
+
+
+    /**
+     * LoggerHeap constructor.
+     * @param null|array $options
+     */
+    function __construct($options = null)
+    {
+        if ($options !== null)
+            $this->with($options);
+    }
 
     /**
      * Build Object With Provided Options
+     * Options:[
+     *  'attach'  => [ iLogger, 'Logger\ClassName', 'Logger\ClassName' => ['_def_context'=>[], logOptions..] ]
+     *               iLogger |  'Logger\ClassName'
+     *  'context' => iContext | [contextOptions..]
      *
-     * @param array $options Associated Array
-     * @param bool $throwException Throw Exception On Wrong Option
+     * @param array $options        Associated Array
+     * @param bool  $throwException Throw Exception On Wrong Option
      *
      * @throws \Exception
      * @return $this
      */
     function with(array $options, $throwException = false)
     {
-        // TODO: Implement with() method.
+        if ($throwException && !(isset($options['attach']) || isset($options['context'])))
+            throw new \InvalidArgumentException('Invalid Options Provided.');
+
+        if (isset($options['attach']) && $attach = $options['attach']) {
+            if ($attach instanceof iLogger || is_string($attach))
+                $attach = [$attach];
+
+            foreach($attach as $p => $b)
+            {
+                /** @var iHeapLogger $heapLogger */
+                if (is_string($p)) {
+                    // 'Logger\ClassName' => [logOptions..]
+                    $heapLogger  = $p;
+                    $options     = $b;
+                } else {
+                    // [iLogger, ]
+                    $heapLogger  = $b;
+                    $options     = null;
+                }
+
+                $defContext = [];
+                if (is_array($options) && isset($options['_def_context']))
+                    ## default context data attached to heap log
+                    $defContext = $options['_def_context'];
+
+                // ['Logger\ClassName', ]
+                if (is_string($heapLogger) && is_int($p)) {
+
+                    (class_exists($heapLogger)) && $heapLogger = new $heapLogger();
+
+                    if ($options && $heapLogger instanceof ipConfigurable)
+                        /** @var ipConfigurable $heapLogger */
+                        $heapLogger->with($options);
+                }
+
+                $this->attach($heapLogger, $defContext);
+            }
+        }
+
+        if (isset($options['context']) && $context = $options['context'])
+            $this->context()->from($context);
+
+        return $this;
     }
 
     /**
@@ -49,14 +106,20 @@ class LoggerHeap
      *   [code]
      *
      *
-     * @param array|mixed $resource
+     * @param array|mixed $optionsResource
      *
      * @throws \InvalidArgumentException if resource not supported
      * @return array
      */
-    static function withOf($resource)
+    static function withOf($optionsResource)
     {
-        // TODO: Implement withOf() method.
+        if (!is_array($optionsResource))
+            throw new \InvalidArgumentException(sprintf(
+                'Options as Resource Just Support Array, given: (%s).'
+                , \Poirot\Std\flatten($optionsResource)
+            ));
+
+        return $optionsResource;
     }
 
     /**
@@ -76,20 +139,27 @@ class LoggerHeap
         $selfContext = clone $this->context();
         $selfContext->from($context); ## merge with default context
 
-        /** @var iHeapLogger $supplier */
-        foreach ($this->__getObjCollection() as $supplier)
+        /** @var iHeapLogger $heapSupplier */
+        foreach ($this->__getObjCollection() as $heapSupplier)
         {
-            $supplierData = $this->__getObjCollection()->getData($supplier);
+            $heapAttachedContext = $this->__getObjCollection()->getData($heapSupplier);
 
             try {
-                if (isset($supplierData['beforeSend'])) {
-                    if (call_user_func_array($supplierData['beforeSend'], [$level, $message, $context]) === false)
+                if (isset($heapAttachedContext['_beforeSend'])) {
+                    $callable = $heapAttachedContext['_beforeSend'];
+                    unset($heapAttachedContext['_beforeSend']);
+
+                    if (false === call_user_func($callable, $level, $message, $context))
                         ## not allowed to log this
                         continue;
                 }
 
                 #!# LogDataContext included with default data such as Timestamp
-                $supplier->write(new ContextDefault($selfContext));
+                $contextWrite = new ContextDefault($selfContext);
+                ## set attached heap specific context
+                ## it will overwrite defaults
+                $contextWrite->from($heapAttachedContext);
+                $heapSupplier->write($contextWrite);
 
             } catch (\Exception $e) { /* Let Other Logs Follow */ }
         } // end foreach
@@ -99,7 +169,7 @@ class LoggerHeap
      * Attach Heap To Log
      *
      * @param iHeapLogger $supplier
-     * @param array        $data     array['beforeSend' => \Closure]
+     * @param array        $data     array['_beforeSend' => \Closure]
      *
      * @return $this
      */
@@ -126,9 +196,9 @@ class LoggerHeap
 
     protected function __getObjCollection()
     {
-        if (!$this->__attached_suppliers)
-            $this->__attached_suppliers = new CollectionObject;
+        if (!$this->_attached_heaps)
+            $this->_attached_heaps = new CollectionObject;
 
-        return $this->__attached_suppliers;
+        return $this->_attached_heaps;
     }
 }
