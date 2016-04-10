@@ -16,6 +16,18 @@ $logger->attach(new PhpLogSupplier, ['_beforeSend' => function($level, $message,
         return false;
 }]);
 $logger->debug('this is debug message', ['type' => 'Debug', 'other_data' => new Entity]);
+
+// =================================================
+$loggerHeap = new P\Logger\LoggerHeap([
+    'attach' => [
+        'Poirot\Logger\LoggerHeap\Heap\HeapNull' => [
+            '_def_context' => ['_before_send' => function($level, $message, $context) {/* ... * /}],
+        ]
+    ],
+    'context' => ['Author' => 'Payam Naderi']
+]);
+
+$loggerHeap->info('Application Start');
 */
 
 class LoggerHeap
