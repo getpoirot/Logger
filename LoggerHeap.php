@@ -56,7 +56,7 @@ class LoggerHeap
             throw new \InvalidArgumentException('Invalid Options Provided.');
 
         if (isset($options['attach']) && $attach = $options['attach']) {
-            if ($attach instanceof iLogger || is_string($attach))
+            if ($attach instanceof iHeapLogger || is_string($attach))
                 $attach = [$attach];
 
             foreach($attach as $p => $b)
