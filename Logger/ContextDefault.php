@@ -4,7 +4,7 @@ namespace Poirot\Logger\Logger;
 use Poirot\Logger\Interfaces\iContext;
 use Poirot\Std\Struct\DataOptionsOpen;
 
-class ContextDataDef
+class ContextDefault
     extends    DataOptionsOpen
     implements iContext
 {

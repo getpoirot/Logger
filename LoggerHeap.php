@@ -4,11 +4,11 @@ namespace Poirot\Logger;
 use Poirot\Std\Interfaces\Pact\ipConfigurable;
 use Poirot\Std\Struct\CollectionObject;
 use Poirot\Logger\Interfaces\iLogger;
-use Poirot\Logger\Logger\ContextDataDef;
+use Poirot\Logger\Logger\ContextDefault;
 use Poirot\Logger\LoggerHeap\Interfaces\iHeapLogger;
 
 /*
-$logger = new Logger();
+$logger = new LoggerHeap();
 $logger->attach(new PhpLogSupplier, ['beforeSend' => function($level, $message, $context) {
     if ($level !== LogLevel::DEBUG)
         ## don`t log except of debug messages
@@ -17,7 +17,8 @@ $logger->attach(new PhpLogSupplier, ['beforeSend' => function($level, $message, 
 $logger->debug('this is debug message', ['type' => 'Debug', 'other_data' => new Entity]);
 */
 
-class LoggerHeap extends aLogger
+class LoggerHeap
+    extends    aLogger
     implements iLogger
     , ipConfigurable
 {
@@ -88,7 +89,7 @@ class LoggerHeap extends aLogger
                 }
 
                 #!# LogDataContext included with default data such as Timestamp
-                $supplier->write(new ContextDataDef($selfContext));
+                $supplier->write(new ContextDefault($selfContext));
 
             } catch (\Exception $e) { /* Let Other Logs Follow */ }
         } // end foreach

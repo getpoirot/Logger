@@ -6,7 +6,8 @@ use Psr\Log\LogLevel;
 use Poirot\Logger\Interfaces\iLogger;
 use Poirot\Logger\Logger\Context\ContextAggregate;
 
-abstract class aLogger extends \Psr\Log\AbstractLogger
+abstract class aLogger
+    extends    \Psr\Log\AbstractLogger
     implements iLogger
 {
     /** @var ContextAggregate */
@@ -74,21 +75,4 @@ abstract class aLogger extends \Psr\Log\AbstractLogger
                 $this->exception($exception, ['belong' => $uid]);
         } while ($exception);
     }
-
-    /**
-     * Prepare Before Log Message
-     *
-     * - callable can return false that mean
-     *   don't log this message
-     *
-     * - context will merge with default logger context
-     *
-     * callable:
-     * bool function($level, $message, $context)
-     *
-     * @param callable $callable
-     *
-     * @return $this
-     */
-    // abstract function beforeLog(callable $callable);
 }
