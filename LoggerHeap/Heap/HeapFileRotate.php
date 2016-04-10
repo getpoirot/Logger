@@ -1,13 +1,13 @@
 <?php
-namespace Poirot\Logger\Supplier;
+namespace Poirot\Logger\LoggerHeap\Heap;
 
-use Poirot\Logger\Formatter\FormatterPsrLogMessage;
-use Poirot\Logger\Interfaces\iFormatter;
-use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
-use Poirot\Std\Interfaces\Struct\iData;
+use Poirot\Logger\Interfaces\iContext;
+use Poirot\Logger\LoggerHeap\Formatter\FormatterPsrLogMessage;
+use Poirot\Logger\LoggerHeap\Interfaces\iFormatter;
+use Poirot\Logger\LoggerHeap\Interfaces\iFormatterProvider;
 
-class SupplierFileRotate
-    extends aSupplierLogger
+class HeapFileRotate
+    extends    aHeap
     implements iFormatterProvider
 {
     # options
@@ -19,7 +19,7 @@ class SupplierFileRotate
     /** @var iFormatter */
     protected $formatter;
 
-    protected function doSend(iData $logData)
+    protected function doWrite(iContext $logData)
     {
         $filePath = $this->getFilePath();
         if ($filePath === null)

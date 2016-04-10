@@ -1,8 +1,7 @@
 <?php
-namespace Poirot\Logger\Formatter;
+namespace Poirot\Logger\LoggerHeap\Formatter;
 
-use Poirot\Logger\Interfaces\Logger\iLogData;
-use Poirot\Std\Interfaces\Struct\iData;
+use Poirot\Logger\Interfaces\iContext;
 
 /**
  * Processes a record's message according to PSR-3 rules
@@ -19,10 +18,11 @@ class FormatterPsrLogMessage extends aFormatter
     /**
      * Format Data To String
      *
-     * @param iData|iLogData $logData
+     * @param iContext $logData
+     *
      * @return string
      */
-    function toString(iData $logData)
+    function toString(iContext $logData)
     {
         $template = $this->getTemplate();
 

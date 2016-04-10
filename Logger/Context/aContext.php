@@ -1,5 +1,5 @@
 <?php
-namespace Poirot\Logger\Context;
+namespace Poirot\Logger\Logger\Context;
 
 use Poirot\Logger\Interfaces\iContext;
 use Poirot\Std\Interfaces\Pact\ipOptionsProvider;

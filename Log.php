@@ -154,13 +154,10 @@ class Log
     /**
      * Get Default Error Handler Logger Name
      *
-     * @return string Logger name
+     * @return string|null Logger name
      */
     static function getErrorHandler()
     {
-        if (!self::$default_error_logger)
-            self::setErrorHandler('FileRotation');
-
         return self::$default_error_logger;
     }
 

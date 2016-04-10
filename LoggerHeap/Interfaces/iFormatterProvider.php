@@ -1,7 +1,5 @@
 <?php
-namespace Poirot\Logger\Interfaces\Logger;
-
-use Poirot\Logger\Interfaces\iFormatter;
+namespace Poirot\Logger\LoggerHeap\Interfaces;
 
 /**
  * Used On Logger(iLogger) that must implement Formatter

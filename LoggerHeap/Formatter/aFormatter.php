@@ -1,13 +1,12 @@
 <?php
-namespace Poirot\Logger\Formatter;
+namespace Poirot\Logger\LoggerHeap\Formatter;
 
-use Poirot\Logger\Interfaces\iFormatter;
-use Poirot\Logger\Interfaces\Logger\iLogData;
-use Poirot\Std\Interfaces\Struct\iData;
+use Poirot\Logger\Interfaces\iContext;
+use Poirot\Logger\LoggerHeap\Interfaces\iFormatter;
 use Poirot\Std\ConfigurableSetter;
 
 abstract class aFormatter
-    extends ConfigurableSetter
+    extends    ConfigurableSetter
     implements iFormatter
 {
     /**
@@ -22,10 +21,11 @@ abstract class aFormatter
     /**
      * Format Data To String
      *
-     * @param iData|iLogData $logData
+     * @param iContext $logData
+     *
      * @return string
      */
-    abstract function toString(iData $logData);
+    abstract function toString(iContext $logData);
 
     // ..
 

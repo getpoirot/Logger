@@ -1,7 +1,8 @@
 <?php
-namespace Poirot\Logger\Context;
+namespace Poirot\Logger\Logger\Context;
 
-class ContextMemoryUsage extends aContext
+class ContextMemoryUsage
+    extends aContext
 {
     /**
      * Get Memory Usage Peak

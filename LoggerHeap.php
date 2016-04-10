@@ -1,11 +1,11 @@
 <?php
 namespace Poirot\Logger;
 
-use Poirot\Logger\Interfaces\iLogger;
-use Poirot\Logger\Interfaces\Logger\iSupplierLogger;
-use Poirot\Logger\Logger\LogDataContext;
 use Poirot\Std\Interfaces\Pact\ipConfigurable;
 use Poirot\Std\Struct\CollectionObject;
+use Poirot\Logger\Interfaces\iLogger;
+use Poirot\Logger\Logger\ContextDataDef;
+use Poirot\Logger\LoggerHeap\Interfaces\iHeapLogger;
 
 /*
 $logger = new Logger();
@@ -17,7 +17,7 @@ $logger->attach(new PhpLogSupplier, ['beforeSend' => function($level, $message, 
 $logger->debug('this is debug message', ['type' => 'Debug', 'other_data' => new Entity]);
 */
 
-class Logger extends aLogger
+class LoggerHeap extends aLogger
     implements iLogger
     , ipConfigurable
 {
@@ -75,7 +75,7 @@ class Logger extends aLogger
         $selfContext = clone $this->context();
         $selfContext->from($context); ## merge with default context
 
-        /** @var iSupplierLogger $supplier */
+        /** @var iHeapLogger $supplier */
         foreach ($this->__getObjCollection() as $supplier)
         {
             $supplierData = $this->__getObjCollection()->getData($supplier);
@@ -88,34 +88,34 @@ class Logger extends aLogger
                 }
 
                 #!# LogDataContext included with default data such as Timestamp
-                $supplier->send(new LogDataContext($selfContext));
+                $supplier->write(new ContextDataDef($selfContext));
 
             } catch (\Exception $e) { /* Let Other Logs Follow */ }
         } // end foreach
     }
 
     /**
-     * Attach Supplier To Log
+     * Attach Heap To Log
      *
-     * @param iSupplierLogger $supplier
+     * @param iHeapLogger $supplier
      * @param array        $data     array['beforeSend' => \Closure]
      *
      * @return $this
      */
-    function attach(iSupplierLogger $supplier, array $data = [])
+    function attach(iHeapLogger $supplier, array $data = [])
     {
         $this->__getObjCollection()->insert($supplier, $data);
         return $this;
     }
 
     /**
-     * Detach Supplier
+     * Detach Heap
      *
-     * @param iSupplierLogger $supplier
+     * @param iHeapLogger $supplier
      *
      * @return $this
      */
-    function detach(iSupplierLogger $supplier)
+    function detach(iHeapLogger $supplier)
     {
         $this->__getObjCollection()->del($supplier);
         return $this;

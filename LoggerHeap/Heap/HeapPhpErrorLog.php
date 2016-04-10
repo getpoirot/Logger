@@ -1,12 +1,14 @@
 <?php
-namespace Poirot\Logger\Supplier;
+namespace Poirot\Logger\LoggerHeap\Heap;
 
-use Poirot\Logger\Formatter\FormatterPsrLogMessage;
-use Poirot\Logger\Interfaces\iFormatter;
-use Poirot\Logger\Interfaces\Logger\iFormatterProvider;
+use Poirot\Logger\Interfaces\iContext;
+use Poirot\Logger\LoggerHeap\Formatter\FormatterPsrLogMessage;
 use Poirot\Std\Interfaces\Struct\iData;
+use Poirot\Logger\LoggerHeap\Interfaces\iFormatter;
+use Poirot\Logger\LoggerHeap\Interfaces\iFormatterProvider;
 
-class SupplierPhpErrorLog extends aSupplierLogger
+class HeapPhpErrorLog
+    extends    aHeap
     implements iFormatterProvider
 {
     const DEFAULT_TEMPLATE = '({level}): {message}, [{%}]';
@@ -32,10 +34,10 @@ class SupplierPhpErrorLog extends aSupplierLogger
         parent::__construct($options);
 
         ## php error_log will append timestamp so we don`t need it anymore in template
-        $this->ignoreData('timestamp');
+        $this->setIgnoreData('timestamp');
     }
 
-    protected function doSend(iData $logData)
+    protected function doWrite(iContext $logData)
     {
         $formattedString = $this->formatter()->toString($logData);
 

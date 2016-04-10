@@ -1,9 +1,10 @@
 <?php
 namespace Poirot\Logger;
 
-use Poirot\Logger\Context\ContextAggregate;
-use Poirot\Logger\Interfaces\iLogger;
 use Psr\Log\LogLevel;
+
+use Poirot\Logger\Interfaces\iLogger;
+use Poirot\Logger\Logger\Context\ContextAggregate;
 
 abstract class aLogger extends \Psr\Log\AbstractLogger
     implements iLogger

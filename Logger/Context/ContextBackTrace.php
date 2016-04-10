@@ -1,9 +1,10 @@
 <?php
-namespace Poirot\Logger\Context;
+namespace Poirot\Logger\Logger\Context;
 
 use Poirot\Logger\Interfaces\iContext;
 
-class ContextBackTrace extends aContext
+class ContextBackTrace
+    extends    aContext
     implements iContext
 {
     /**

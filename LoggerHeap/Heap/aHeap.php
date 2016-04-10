@@ -1,28 +1,28 @@
 <?php
-namespace Poirot\Logger\Supplier;
+namespace Poirot\Logger\LoggerHeap\Heap;
 
-use Poirot\Logger\Interfaces\Logger\iSupplierLogger;
-use Poirot\Std\Interfaces\Struct\iData;
+use Poirot\Logger\Interfaces\iContext;
+use Poirot\Logger\LoggerHeap\Interfaces\iHeapLogger;
 use Poirot\Std\Struct\aDataOptions;
 
-abstract class aSupplierLogger
-    extends aDataOptions
-    implements iSupplierLogger
+abstract class aHeap
+    extends    aDataOptions
+    implements iHeapLogger
 {
     /** @var string[] Ignored Data From Log */
     protected $ignoreData = [];
 
 
-    abstract protected function doSend(iData $logData);
+    abstract protected function doWrite(iContext $logData);
 
     /**
-     * Send Message To Log Supplier
+     * Send Message To Log Heap
      *
-     * @param iData $logData
+     * @param iContext $logData
      *
      * @return $this
      */
-    function send(iData $logData)
+    function write(iContext $logData)
     {
         $logData = clone $logData;
 
@@ -36,7 +36,7 @@ abstract class aSupplierLogger
 
         // ...
 
-        $this->doSend($logData);
+        $this->doWrite($logData);
     }
 
     /**
@@ -46,7 +46,7 @@ abstract class aSupplierLogger
      *
      * @return $this
      */
-    function ignoreData($key)
+    function setIgnoreData($key)
     {
         $this->ignoreData[$key] = true;
         return $this;
@@ -59,10 +59,10 @@ abstract class aSupplierLogger
      *
      * @return $this
      */
-    function ignoreDataSet(array $keys)
+    function setIgnoreDataSet(array $keys)
     {
         foreach($keys as $key)
-            $this->ignoreData($key);
+            $this->setIgnoreData($key);
 
         return $this;
     }

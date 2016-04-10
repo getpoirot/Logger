@@ -1,8 +1,6 @@
 <?php
 namespace Poirot\Logger\Interfaces;
 
-use Poirot\Logger\Context\ContextAggregate;
-
 interface iLogger extends \Psr\Log\LoggerInterface
 {
     /**
@@ -10,7 +8,7 @@ interface iLogger extends \Psr\Log\LoggerInterface
      *
      * - default context will merge with self::log method argument context
      *
-     * @return ContextAggregate
+     * @return iContext
      */
     function context();
 
