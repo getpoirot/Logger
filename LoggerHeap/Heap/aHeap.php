@@ -10,7 +10,7 @@ abstract class aHeap
     implements iHeapLogger
 {
     /** @var string[] Ignored Data From Log */
-    protected $ignoreData = [];
+    protected $ignoreData = array();
 
 
     abstract protected function doWrite(iContext $logData);

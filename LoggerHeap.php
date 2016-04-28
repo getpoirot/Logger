@@ -69,7 +69,7 @@ class LoggerHeap
 
         if (isset($options['attach']) && $attach = $options['attach']) {
             if ($attach instanceof iHeapLogger || is_string($attach))
-                $attach = [$attach];
+                $attach = array($attach);
 
             foreach($attach as $p => $b)
             {
@@ -84,7 +84,7 @@ class LoggerHeap
                     $options     = null;
                 }
 
-                $defContext = [];
+                $defContext = array();
                 if (is_array($opts) && isset($opts['_def_context'])) {
                     ## default context data attached to heap log
                     $defContext = $opts['_def_context'];
@@ -147,7 +147,7 @@ class LoggerHeap
      *
      * @return null
      */
-    function log($level, $message, array $context = [])
+    function log($level, $message, array $context = array())
     {
         $selfContext = clone $this->context();
         $selfContext->import($context); ## merge with default context
@@ -171,7 +171,7 @@ class LoggerHeap
 
             ErrorStack::handleException(function($e) {/* Let Other Logs Follow */});
 
-            $context->import(['level' => $level, 'message' => $message]);
+            $context->import(array('level' => $level, 'message' => $message));
 
             if (isset($callable) && false === call_user_func($callable, $level, $message, $context))
                 ## not allowed to log this
@@ -192,7 +192,7 @@ class LoggerHeap
      *
      * @return $this
      */
-    function attach(iHeapLogger $supplier, array $data = [])
+    function attach(iHeapLogger $supplier, array $data = array())
     {
         $this->__getObjCollection()->insert($supplier, $data);
         return $this;

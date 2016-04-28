@@ -64,6 +64,7 @@ abstract class aContext
      */
     static function newOptsData($builder = null)
     {
-        return (new DataOptionsOpen)->import($builder);
+        $opt = new DataOptionsOpen;
+        return $opt->import($builder);
     }
 }

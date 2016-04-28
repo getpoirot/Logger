@@ -1,6 +1,8 @@
 <?php
 namespace Poirot\Logger\Logger;
 
+use DateTime;
+
 use Poirot\Logger\Interfaces\iContext;
 use Poirot\Std\Struct\DataOptionsOpen;
 
@@ -68,7 +70,7 @@ class ContextDefault
     function getTimestamp()
     {
         if (!$this->timestamp)
-            $this->timestamp = new \DateTime();
+            $this->timestamp = new DateTime();
 
         return $this->timestamp;
     }

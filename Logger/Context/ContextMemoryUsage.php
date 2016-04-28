@@ -32,6 +32,7 @@ class ContextMemoryUsage
      */
     static function newOptsData($builder = null)
     {
-        return (new ContextMemoryUsageOptions)->import($builder);
+        $opt = new ContextMemoryUsageOptions;
+        return $opt->import($builder);
     }
 }

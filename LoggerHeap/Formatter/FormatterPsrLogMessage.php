@@ -30,7 +30,7 @@ class FormatterPsrLogMessage extends aFormatter
             ## nothing can be replaced, so return template self
             return $template;
 
-        $replacements = [];
+        $replacements = array();
         foreach ($logData as $key => $value) {
             $flatValue = $this->flatten($value);
 

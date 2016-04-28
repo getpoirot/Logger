@@ -43,7 +43,7 @@ class HeapPhpErrorLog
 
         $lines = ($this->isExpandNewLines())
             ? preg_split('{[\r\n]+}', $formattedString)
-            : [$formattedString];
+            : array($formattedString);
 
         foreach ($lines as $line)
             error_log($line, $this->getMessageType());
@@ -58,7 +58,7 @@ class HeapPhpErrorLog
     {
         if (!$this->formatter)
             ## php error_log will append timestamp so we don`t need it anymore in template
-            $this->formatter = new FormatterPsrLogMessage(['template' => self::DEFAULT_TEMPLATE]);
+            $this->formatter = new FormatterPsrLogMessage(array('template' => self::DEFAULT_TEMPLATE));
 
         return $this->formatter;
     }
@@ -75,7 +75,7 @@ class HeapPhpErrorLog
      */
     function setMessageType($type)
     {
-        if (!in_array($type, [self::MESSAGE_SAPI, self::MESSAGE_OS]))
+        if (!in_array($type, array(self::MESSAGE_SAPI, self::MESSAGE_OS)))
             throw new \InvalidArgumentException(sprintf(
                 'The given message type (%s) is not supported.'
                 , $type
