@@ -24,7 +24,7 @@ abstract class aLogger
      *
      * @return null
      */
-    abstract function log($level, $message, array $context = []);
+    abstract function log($level, $message, array $context = array());
 
 
     /**
@@ -50,15 +50,15 @@ abstract class aLogger
      *
      * @return null
      */
-    function exception(\Exception $exception, array $context = [])
+    function exception(\Exception $exception, array $context = array())
     {
         $uid   = spl_object_hash($exception);
-        $extra = [
+        $extra = array(
             'uid'   => $uid,
             'file'  => $exception->getFile(),
             'line'  => $exception->getLine(),
             'trace' => $exception->getTrace(),
-        ];
+        );
 
         if (isset($exception->xdebug_message))
             $extra['xdebug'] = $exception->xdebug_message;
@@ -72,7 +72,7 @@ abstract class aLogger
             $exception = $exception->getPrevious();
             if ($exception)
                 ## pass belong context
-                $this->exception($exception, ['belong' => $uid]);
+                $this->exception($exception, array('belong' => $uid));
         } while ($exception);
     }
 }

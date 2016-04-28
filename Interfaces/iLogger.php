@@ -1,7 +1,10 @@
 <?php
 namespace Poirot\Logger\Interfaces;
 
-interface iLogger extends \Psr\Log\LoggerInterface
+use Psr\Log\LoggerInterface;
+
+interface iLogger 
+    extends LoggerInterface
 {
     /**
      * Default Logger Context Data
@@ -20,5 +23,5 @@ interface iLogger extends \Psr\Log\LoggerInterface
      *
      * @return null
      */
-    function exception(\Exception $exception, array $context = []);
+    function exception(\Exception $exception, array $context = array());
 }

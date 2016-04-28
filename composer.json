@@ -11,18 +11,19 @@
     ]
     , "target-dir": "Poirot/Logger"
     , "require": {
-        "psr/log": "~1.0"
+        "php": ">=5.3.0"
+        , "psr/log": "~1.0"
         , "poirot/std" : "dev-devel"
     }
     , "autoload"  : {
         "psr-0": {
             "Poirot\\Logger": "."
         }
-    },
-    "repositories": [
+    }
+    , "repositories": [
       {
-        "type": "git",
-        "url": "https://github.com/phPoirot/Std.git"
+        "type": "git"
+        , "url": "https://github.com/phPoirot/Std.git"
       }
     ]
 }
