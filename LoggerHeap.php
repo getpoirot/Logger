@@ -101,7 +101,7 @@ class LoggerHeap
         }
 
         if (isset($options['context']) && $context = $options['context'])
-            $this->context()->from($context);
+            $this->context()->import($context);
 
         return $this;
     }
@@ -150,7 +150,7 @@ class LoggerHeap
     function log($level, $message, array $context = [])
     {
         $selfContext = clone $this->context();
-        $selfContext->from($context); ## merge with default context
+        $selfContext->import($context); ## merge with default context
 
         /** @var iHeapLogger $heapSupplier */
         foreach ($this->__getObjCollection() as $heapSupplier)
@@ -165,13 +165,13 @@ class LoggerHeap
             $context = new ContextDefault($selfContext); // #!# Context included with default data such as Timestamp
             ## set attached heap specific context
             ## it will overwrite defaults
-            $context->from($heapAttachedContext);
+            $context->import($heapAttachedContext);
 
             // ..
 
             ErrorStack::handleException(function($e) {/* Let Other Logs Follow */});
 
-            $context->from(['level' => $level, 'message' => $message]);
+            $context->import(['level' => $level, 'message' => $message]);
 
             if (isset($callable) && false === call_user_func($callable, $level, $message, $context))
                 ## not allowed to log this

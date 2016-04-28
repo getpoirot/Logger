@@ -26,7 +26,7 @@ abstract class aContext
     function __construct($data = null, $options = null)
     {
         if ($options !== null)
-            $this->optsData()->from($options);
+            $this->optsData()->import($options);
 
         parent::__construct($data);
     }
@@ -64,6 +64,6 @@ abstract class aContext
      */
     static function newOptsData($builder = null)
     {
-        return (new DataOptionsOpen)->from($builder);
+        return (new DataOptionsOpen)->import($builder);
     }
 }
