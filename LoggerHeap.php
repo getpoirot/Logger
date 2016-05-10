@@ -121,7 +121,7 @@ class LoggerHeap
      * @throws \InvalidArgumentException if resource not supported
      * @return array
      */
-    static function withOf($optionsResource)
+    static function parseWith($optionsResource)
     {
         if (!is_array($optionsResource))
             throw new \InvalidArgumentException(sprintf(
