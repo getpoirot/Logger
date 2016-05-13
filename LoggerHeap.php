@@ -56,14 +56,22 @@ class LoggerHeap
      *               iLogger |  'Logger\ClassName'
      *  'context' => iContext | [contextOptions..]
      *
-     * @param array $options        Associated Array
-     * @param bool  $throwException Throw Exception On Wrong Option
+     * @param array|\Traversable $options        Associated Array
+     * @param bool               $throwException Throw Exception On Wrong Option
      *
-     * @throws \Exception
      * @return $this
+     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
-    function with(array $options, $throwException = false)
+    function with($options, $throwException = false)
     {
+        if ($options instanceof \Traversable)
+            $options = \Poirot\Std\cast($options)->toArray();
+        
+        if (!is_array($options))
+            throw new \InvalidArgumentException;
+        
+        
         if ($throwException && !(isset($options['attach']) || isset($options['context'])))
             throw new \InvalidArgumentException('Invalid Options Provided.');
 
@@ -121,7 +129,7 @@ class LoggerHeap
      * @throws \InvalidArgumentException if resource not supported
      * @return array
      */
-    static function parseWith($optionsResource)
+    static function parseWith($optionsResource, array $_ = null)
     {
         if (!is_array($optionsResource))
             throw new \InvalidArgumentException(sprintf(
@@ -219,5 +227,17 @@ class LoggerHeap
             $this->_attached_heaps = new CollectionObject;
 
         return $this->_attached_heaps;
+    }
+
+    /**
+     * Is Configurable With Given Resource
+     *
+     * @param mixed $optionsResource
+     *
+     * @return boolean
+     */
+    static function isConfigurableWith($optionsResource)
+    {
+        // TODO: Implement isConfigurableWith() method.
     }
 }
