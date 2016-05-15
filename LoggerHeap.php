@@ -40,12 +40,13 @@ class LoggerHeap
 
 
     /**
-     * LoggerHeap constructor.
-     * @param null|array $options
+     * Construct
+     *
+     * @param array|\Traversable $options
      */
     function __construct($options = null)
     {
-        if ($options !== null)
+        if (!empty($options) && $options !== null)
             $this->with($options);
     }
 
@@ -141,6 +142,18 @@ class LoggerHeap
     }
 
     /**
+     * Is Configurable With Given Resource
+     *
+     * @param mixed $optionsResource
+     *
+     * @return boolean
+     */
+    static function isConfigurableWith($optionsResource)
+    {
+        return is_array($optionsResource);
+    }
+
+    /**
      * Logs with an arbitrary level.
      *
      * - merge given context with default context data clone
@@ -227,17 +240,5 @@ class LoggerHeap
             $this->_attached_heaps = new CollectionObject;
 
         return $this->_attached_heaps;
-    }
-
-    /**
-     * Is Configurable With Given Resource
-     *
-     * @param mixed $optionsResource
-     *
-     * @return boolean
-     */
-    static function isConfigurableWith($optionsResource)
-    {
-        // TODO: Implement isConfigurableWith() method.
     }
 }
