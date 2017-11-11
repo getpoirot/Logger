@@ -192,7 +192,7 @@ class LoggerHeap
 
             ErrorStack::handleException(function($e) {/* Let Other Logs Follow */});
 
-            $context->import(array('level' => $level, 'message' => $message));
+            $context->import(array('level' => $level, 'message' => $message, 'timestamp' => \time()));
 
             if (isset($callable) && false === call_user_func($callable, $level, $message, $context))
                 ## not allowed to log this
