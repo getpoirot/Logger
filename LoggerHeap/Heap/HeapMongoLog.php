@@ -37,19 +37,22 @@ class HeapMongoLog
     /**
      * Surprisingly does NOT write!
      * Instead adds $logData to its internal array,to be inserted while __destruct
+     * TODO: $this->formatter()->toString($logData)
      *
      * @param iContext $logData
      */
     protected function doWrite(iContext $logData)
     {
         $logData = \iterator_to_array($logData);
+        /** @var \DateTime $datetime */
+        $datetime = $logData['timestamp'];
         $log = [
-            'datetime'      => new UTCDateTime ($logData['timestamp'] * 1000),
+            'datetime'      => new UTCDateTime ($datetime->getTimestamp() * 1000),
             'message'       => $logData['message'],
-            'psr_message'   => $this->formatter()->toString($logData),
+//            'psr_message'   => $this->formatter()->toString($logData),
             'level'         => $logData['level'],
         ];
-        unset($logData['datetime']); unset($logData['message']); unset($logData['level']);
+        unset($logData['timestamp']); unset($logData['message']); unset($logData['level']);
         if ($logData)
             $log['context'] = $logData;
         $this->logs[] = $log;
