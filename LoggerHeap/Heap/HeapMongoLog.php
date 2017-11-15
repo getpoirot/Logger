@@ -77,7 +77,9 @@ class HeapMongoLog
     public function __destruct()
     {
         try {
-            $this->collection->insertMany($this->logs, [ 'ordered' => false ]);
+            if ($this->logs) {
+                $this->collection->insertMany($this->logs, [ 'ordered' => false ]);
+            }
         } catch (\Exception $exception) {}
     }
 }
