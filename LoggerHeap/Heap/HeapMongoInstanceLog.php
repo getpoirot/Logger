@@ -1,6 +1,7 @@
 <?php
 namespace Poirot\Logger\LoggerHeap\Heap;
 
+use MongoDB\BSON\UTCDatetime;
 use \MongoDB\Collection;
 
 use Poirot\Std\Interfaces\Struct\iData;
@@ -10,17 +11,15 @@ use Poirot\Logger\LoggerHeap\Interfaces\iFormatterProvider;
 use Poirot\Logger\LoggerHeap\Formatter\FormatterPsrLogMessage;
 
 
-class HeapMongoLog
+class HeapMongoInstanceLog
     extends    aHeap
     implements iFormatterProvider
 {
-
     /** @var  Collection */
     protected $collection;
     /** @var iFormatter */
     protected $formatter;
-    /** @var  array */
-    protected $logs = [];
+
 
     /**
      * Construct
@@ -56,7 +55,8 @@ class HeapMongoLog
         if ($logData)
             $log['context'] = $logData;
 
-        $this->logs[] = $log;
+
+        $this->collection->insertOne($log);
     }
 
     /**
@@ -70,17 +70,5 @@ class HeapMongoLog
             $this->formatter = new FormatterPsrLogMessage;
 
         return $this->formatter;
-    }
-
-    /**
-     * Actual logging happens here
-     */
-    public function __destruct()
-    {
-        try {
-            if ($this->logs) {
-                $this->collection->insertMany($this->logs, [ 'ordered' => false ]);
-            }
-        } catch (\Exception $exception) {}
     }
 }

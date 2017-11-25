@@ -5,6 +5,7 @@ use Poirot\Logger\Interfaces\iContext;
 use Poirot\Logger\LoggerHeap\Interfaces\iHeapLogger;
 use Poirot\Std\Struct\aDataOptions;
 
+
 abstract class aHeap
     extends    aDataOptions
     implements iHeapLogger
