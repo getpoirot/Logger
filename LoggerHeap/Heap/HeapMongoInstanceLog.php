@@ -51,6 +51,7 @@ class HeapMongoInstanceLog
 //            'psr_message'   => $this->formatter()->toString($logData),
             'level'         => $logData['level'],
         ];
+
         unset($logData['timestamp']); unset($logData['message']); unset($logData['level']);
         if ($logData)
             $log['context'] = $logData;
