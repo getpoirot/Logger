@@ -6,6 +6,7 @@ use Poirot\Logger\LoggerHeap\Formatter\FormatterPsrLogMessage;
 use Poirot\Logger\LoggerHeap\Interfaces\iFormatter;
 use Poirot\Logger\LoggerHeap\Interfaces\iFormatterProvider;
 
+
 class HeapFileRotate
     extends    aHeap
     implements iFormatterProvider
@@ -39,7 +40,6 @@ class HeapFileRotate
             , $contents
             , FILE_APPEND|LOCK_EX
         );
-        chmod($filePath, $this->getFilePermission());
     }
 
     /**
@@ -91,29 +91,6 @@ class HeapFileRotate
     function setFilePath($filePath)
     {
         $this->filePath = (string) $filePath;
-        return $this;
-    }
-
-    /**
-     * File Permission
-     *
-     * @return int
-     */
-    function getFilePermission()
-    {
-        return $this->filePermission;
-    }
-
-    /**
-     * Set File Permission
-     *
-     * @param int $filePermission
-     *
-     * @return $this
-     */
-    function setFilePermission($filePermission)
-    {
-        $this->filePermission = $filePermission;
         return $this;
     }
 
